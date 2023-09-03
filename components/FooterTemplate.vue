@@ -4,7 +4,7 @@
         <!-- Copyright -->
             <div class="text-center p-3">
                 <a class="text-dark" href="https://www.github.com/machive5/">by Abrar Rafi Dwianto</a>
-                <p> seorang anak SMA berumur 17 tahun asal surabaya yang bermimpi untuk menjadi seorang programmer dan menciptakan inovasi di bidang teknologi.</p>
+                <p>A 17 year old high school student from Surabaya who dreams of becoming a developer and creating innovations in the field of technology.</p>
             </div>
 
         <!-- Copyright -->
@@ -12,9 +12,6 @@
     </div>
 </template>
 <script>
-    export default{
-        name:'FooterTemplate',
-    }
 </script>
 <style>
     div footer{

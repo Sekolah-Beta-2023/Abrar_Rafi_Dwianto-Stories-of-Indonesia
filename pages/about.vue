@@ -10,6 +10,15 @@
 </template>
 
 <script>
+    import NavbarTemplate from '~/components/NavbarTemplate.vue';
+    import FooterTemplate from '~/components/FooterTemplate.vue';
+
+    export default {
+        components: {
+            NavbarTemplate,
+            FooterTemplate,
+        },
+    }
 </script>
 
 <style>

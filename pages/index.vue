@@ -11,6 +11,15 @@
 </template>
 
 <script>
+  import NavbarTemplate from '~/components/NavbarTemplate.vue';
+  import FooterTemplate from '~/components/FooterTemplate.vue';
+
+  export default {
+    components: {
+      NavbarTemplate,
+      FooterTemplate,
+    },
+  }
 </script>
 <style>
   @font-face {
@@ -27,15 +36,19 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
+    padding: 0px 10px;
   }
   .welcome h1{
     font-family: "boutiques of merauke";
     font-size: calc(1.375rem + 5vw);
     
   }
-  @media only screen and (max-width: 452px){
+  .welcome h1, .welcome p{
+    text-align: center;
+  }
+  /* @media only screen and (max-width: 452px){
     .welcome h1, .welcome p{
       text-align: center;
     }
-  }
+  } */
 </style>

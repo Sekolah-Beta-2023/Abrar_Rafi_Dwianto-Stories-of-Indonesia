@@ -12,15 +12,18 @@
                 <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
               </div>
               <div class="offcanvas-body">
-                <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+                <ul class="navbar-nav justify-content-end flex-grow-1 pe-2">
+                  <form class="d-flex">
+                      <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                  </form>
                   <li class="nav-item h" >
-                    <a class="nav-link" aria-current="page" href=".">Home</a>
+                    <a :class="this.$route.path === '/' ? 'nav-link active':'nav-link'" aria-current="page" href=".">Home</a>
                   </li>
                   <li class="nav-item a">
-                    <a class="nav-link" href="/about">About</a>
+                    <a :class="this.$route.path === '/about' ? 'nav-link active':'nav-link'" href="/about">About</a>
                   </li>
                   <li class="nav-item e">
-                    <a href="/explore" class="nav-link">explore</a>
+                    <a :class="this.$route.path === '/explore' ? 'nav-link active':'nav-link'" href="/explore" class="nav-link">Explore</a>
                   </li>
                 </ul>
               </div>
@@ -31,9 +34,6 @@
 </template>
 
 <script>
-    export default {
-        name:'NavbarTemplate',
-    }
 </script>
 <style>
     @font-face {
@@ -58,5 +58,12 @@
     }
     .offcanvas-backdrop{
         display: none !important;
+    }
+    form.d-flex{
+      justify-content: center;
+      align-items: center;
+    }
+    input.form-control{
+      height: 80%;
     }
 </style>
