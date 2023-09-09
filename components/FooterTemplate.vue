@@ -3,7 +3,7 @@
         <footer class="text-center text-lg-start">
         <!-- Copyright -->
             <div class="text-center p-3">
-                <a class="text-dark" href="https://www.github.com/machive5/">by Abrar Rafi Dwianto</a>
+                <a class="text-dark" href="https://www.github.com/machive5/">By Abrar Rafi Dwianto</a>
                 <p>A 17 year old high school student from Surabaya who dreams of becoming a developer and creating innovations in the field of technology.</p>
             </div>
 
