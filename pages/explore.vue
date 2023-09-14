@@ -99,9 +99,11 @@
         },
         methods: {
             active(event){
+                event.preventDefault();
                 event.target.parentElement.focus();
                 event.target.selected = !event.target.selected;
                 this.show = this.filterCategories;
+                return false;
             }
         },
         computed: {
