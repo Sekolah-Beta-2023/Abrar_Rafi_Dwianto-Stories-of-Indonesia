@@ -3,17 +3,17 @@
         <NavbarTemplate />
         <div class="main">
             <div class="box container-fluid mt-4">
-                <div class="dropdown">
+                <div class="dropdown filter">
                     <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
                         Filter categories
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><div class="dropdown-item"><input type="checkbox" name="All" id="All"><label for="All">All</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Folk Lore" id="Folk"><label for="Folk">Folk Lore</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Horror" id="Horror"><label for="Horror">Horror</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="History" id="History"><label for="History">History</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Legend" id="Legend"><label for="Legend">Legend</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Myth" id="Myth"><label for="Myth">Myth</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="All" id="All" :checked="all"><label for="All">All</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Folk Lore" id="Folk" checked><label for="Folk">Folk Lore</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Horror" id="Horror" checked><label for="Horror">Horror</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="History" id="History" checked><label for="History">History</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Legend" id="Legend" checked><label for="Legend">Legend</label></div></li>
+                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Myth" id="Myth" checked><label for="Myth">Myth</label></div></li>
                     </ul>
                 </div>
                 <form class="d-flex search">
@@ -87,7 +87,8 @@
             return{
                 data,
                 show: data,
-                filter: [],
+                filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
+                all: true,
             }
         },
         components: {
@@ -95,34 +96,34 @@
             FooterTemplate,
         },
         mounted(){
-            const elm = document.querySelectorAll('.dropdown-item');
-            elm.forEach(el => {
-                el.getElementsByTagName("input")[0].checked = true;
-                this.filter.push(el.getElementsByTagName("input")[0].name);
 
-                el.getElementsByTagName("input")[0].addEventListener('click',()=>{
-                    const name = el.getElementsByTagName("input")[0].name;
-                    if (name === 'All'){
-                        elm.forEach(elm => {
-                            elm.getElementsByTagName("input")[0].checked = true;
-                            this.filter.push(elm.getElementsByTagName("input")[0].name);
-                        });
-                    }
-                    else if (this.filter.includes(name)){
-                        elm[0].getElementsByTagName("input")[0].checked = false;
-                        this.filter = this.filter.filter(itm =>{
-                            return itm !== name;
-                        });
-                    }
-                    else{
-                        this.filter.push(name);
-                    }
-                    this.show = this.filterCategories;
-                });
-            });
         },
         methods:{
-            
+            allf(){
+                
+                
+            },
+            drophand(e){
+                const checkbox = document.querySelector('.filter').querySelectorAll('.dropdown-item');
+                const name = e.target.name;
+                if (name === 'All'){
+                    this.all = true;
+                    checkbox.forEach(c =>{
+                        c.getElementsByTagName('input')[0].checked = true;
+                    });
+                    this.filter = ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'];
+                }
+                else if (this.filter.includes(name)){
+                    this.all = false;
+                    this.filter = this.filter.filter(itm =>{
+                        return itm !== name;
+                    });
+                }
+                else{
+                    this.filter.push(name);
+                }
+                this.show = this.filterCategories;
+            }
         },
         computed: {
             filterCategories(){
