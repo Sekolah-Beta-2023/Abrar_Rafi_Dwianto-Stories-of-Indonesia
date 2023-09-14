@@ -3,20 +3,20 @@
         <NavbarTemplate />
         <div class="main">
             <div class="box container-fluid mt-4">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                        Filter categories
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><div class="dropdown-item"><input type="checkbox" name="All" id="All"><label for="All">All</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Folk Lore" id="Folk"><label for="Folk">Folk Lore</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Horror" id="Horror"><label for="Horror">Horror</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="History" id="History"><label for="History">History</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Legend" id="Legend"><label for="Legend">Legend</label></div></li>
-                        <li><div class="dropdown-item"><input type="checkbox" name="Myth" id="Myth"><label for="Myth">Myth</label></div></li>
-                    </ul>
-                </div>
                 <form class="d-flex search">
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            Dropdown button
+                        </button>
+                        <select v-model="filter" class="dropdown-menu" aria-labelledby="dropdownMenuButton1" multiple>
+                            <option @click="active" value="all" class="dropdown-item">all</option>
+                            <option @click="active" value="Folk Lore" class="dropdown-item">Folk Lore</option>
+                            <option @click="active" value="Horror" class="dropdown-item">Horror</option>
+                            <option @click="active" value="History" class="dropdown-item">History</option>
+                            <option @click="active" value="Legend" class="dropdown-item">Legend</option>
+                            <option @click="active" value="Myth" class="dropdown-item">Myth</option>
+                        </select>
+                    </div>
                     <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
                 </form>
             </div>
@@ -87,7 +87,7 @@
             return{
                 data,
                 show: data,
-                filter: [],
+                filter:[],
             }
         },
         components: {
@@ -95,31 +95,14 @@
             FooterTemplate,
         },
         mounted(){
-            const elm = document.querySelectorAll('.dropdown-item');
-            elm.forEach(el => {
-                el.getElementsByTagName("input")[0].checked = true;
-                this.filter.push(el.getElementsByTagName("input")[0].name);
-
-                el.getElementsByTagName("input")[0].addEventListener('click',()=>{
-                    const name = el.getElementsByTagName("input")[0].name;
-                    if (name === 'All'){
-                        elm.forEach(elm => {
-                            elm.getElementsByTagName("input")[0].checked = true;
-                            this.filter.push(elm.getElementsByTagName("input")[0].name);
-                        });
-                    }
-                    else if (this.filter.includes(name)){
-                        elm[0].getElementsByTagName("input")[0].checked = false;
-                        this.filter = this.filter.filter(itm =>{
-                            return itm !== name;
-                        });
-                    }
-                    else{
-                        this.filter.push(name);
-                    }
-                    this.show = this.filterCategories;
-                });
-            });
+            console.log(this.filter);
+        },
+        methods: {
+            active(event){
+                event.target.parentElement.focus();
+                event.target.selected = !event.target.selected;
+                this.show = this.filterCategories;
+            }
         },
         computed: {
             filterCategories(){
