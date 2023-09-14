@@ -121,6 +121,9 @@
                 });
             });
         },
+        methods:{
+            
+        },
         computed: {
             filterCategories(){
                 const show = [];
