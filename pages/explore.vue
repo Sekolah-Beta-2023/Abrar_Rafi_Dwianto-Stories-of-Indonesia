@@ -1,5 +1,35 @@
 <template>
+    <!-- form input add story -->
     <div>
+        <div v-if="addcomp" class="formadd">
+            <form class="mb-3 rounded" @submit.prevent="addstory">
+                <label for="cover" class="form-label">cover</label>
+                <input @change="filebind" type="file" name="cover" id="cover" class="form-control" aria-describedby="helpId" accept="image/png, image/jpeg, image/jpg, image/svg" required>
+                <label for="title" class="form-label">Title</label>
+                <input v-model="form.title" type="text" name="title" id="title" class="form-control" placeholder="title" aria-describedby="helpId" required>
+                <label for="description" class="form-label">description</label>
+                <textarea v-model="form.content" name="description" id="description" class="form-control" placeholder="decription" aria-describedby="helpId" required></textarea>
+                <label for="author" class="form-label">author</label>
+                <input v-model="form.author" type="text" name="author" id="author" class="form-control" placeholder="author" aria-describedby="helpId" required>
+                <div class="dropdown addcate" :style="{width:'100%',}" required>
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true" :style="{width:'100%',}">
+                        categories
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                        <li><div class="dropdown-item"><input @click="dropadd" type="checkbox" name="Folk Lore" id="Folk" ><label for="Folk">Folk Lore</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropadd" type="checkbox" name="Horror" id="Horror" ><label for="Horror">Horror</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropadd" type="checkbox" name="History" id="History" ><label for="History">History</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropadd" type="checkbox" name="Legend" id="Legend" ><label for="Legend">Legend</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropadd" type="checkbox" name="Myth" id="Myth" ><label for="Myth">Myth</label></div></li>
+                    </ul>
+                </div>
+                <div class="wrapper" :style="{width:'100%', display:'flex', flexDirection:'row', justifyContent:'space-between', alignItems:'center', marginTop:'3%'}">
+                    <button class="btn btn-primary" :style="{width:'45%'}">Add</button>
+                    <button class="btn btn-danger" :style="{width:'45%'}" @click="addCntrlBtn">Cancel</button>
+                </div>
+            </form>
+        </div>
+
         <NavbarTemplate />
         <div class="main">
             <div class="box container-fluid mt-4">
@@ -8,12 +38,12 @@
                         Filter categories
                     </button>
                     <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="All" id="All" :checked="all"><label for="All">All</label></div></li>
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Folk Lore" id="Folk" checked><label for="Folk">Folk Lore</label></div></li>
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Horror" id="Horror" checked><label for="Horror">Horror</label></div></li>
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="History" id="History" checked><label for="History">History</label></div></li>
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Legend" id="Legend" checked><label for="Legend">Legend</label></div></li>
-                        <li><div class="dropdown-item"><input @click="drophand" type="checkbox" name="Myth" id="Myth" checked><label for="Myth">Myth</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="All" id="All" :checked="all"><label for="All">All</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Folk Lore" id="Folk" checked><label for="Folk">Folk Lore</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Horror" id="Horror" checked><label for="Horror">Horror</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="History" id="History" checked><label for="History">History</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Legend" id="Legend" checked><label for="Legend">Legend</label></div></li>
+                        <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Myth" id="Myth" checked><label for="Myth">Myth</label></div></li>
                     </ul>
                 </div>
                 <form class="d-flex search">
@@ -34,6 +64,11 @@
                         </div>
                     </div>
                 </div>
+                <div class="col">
+                    <div @click="addCntrlBtn" class="add card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
+                        <h1>+</h1>
+                    </div>
+                </div>
             </div>
         </div>
         <FooterTemplate />
@@ -44,7 +79,7 @@
     import NavbarTemplate from '~/components/NavbarTemplate.vue';
     import FooterTemplate from '~/components/FooterTemplate.vue';
     
-    const data = [
+    const db = [
         {
             'title': 'Timun Mas',
             'content': 'Sint cupidatat cupidatat nulla aute aliqua quis nostrud duis tempor eu in. Labore commodo ad anim qui excepteur ea irure amet deserunt non mollit commodo. Adipisicing consequat eiusmod officia culpa elit anim id aute ex est commodo id fugiat dolore. Ea eu minim minim sit culpa qui laborum pariatur veniam aute nisi proident velit occaecat. Qui labore eiusmod aute elit. Irure laborum sit nostrud incididunt sit ipsum ex aute incididunt laborum.',
@@ -85,10 +120,18 @@
     export default {
         data(){
             return{
-                data,
-                show: data,
+                db,
+                show: db,
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
+                addcomp: false,
+                form: {
+                    'cover':'',
+                    'title':'',
+                    'content':'',
+                    'author':'',
+                    'categories':[]
+                }
             }
         },
         components: {
@@ -99,11 +142,28 @@
 
         },
         methods:{
-            allf(){
-                
-                
+            addCntrlBtn(){
+                this.addcomp = !this.addcomp;
+                this.form = {
+                    'cover':'',
+                    'title':'',
+                    'content':'',
+                    'author':'',
+                    'categories':[]
+                }
             },
-            drophand(e){
+            addstory(){
+                const setUp = {
+                    'cover': this.form.cover,
+                    'title': this.form.title,
+                    'content': this.form.content,
+                    'author': this.form.author,
+                    'categories': this.form.categories,
+                }
+                this.db.push(setUp);
+                this.addcomp = !this.addcomp;
+            },
+            dropfltr(e){
                 const checkbox = document.querySelector('.filter').querySelectorAll('.dropdown-item');
                 const name = e.target.name;
                 if (name === 'All'){
@@ -111,7 +171,9 @@
                     checkbox.forEach(c =>{
                         c.getElementsByTagName('input')[0].checked = true;
                     });
-                    this.filter = ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'];
+                    this.filter = ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth',];
+                    this.show = this.db;
+                    return;
                 }
                 else if (this.filter.includes(name)){
                     this.all = false;
@@ -123,12 +185,27 @@
                     this.filter.push(name);
                 }
                 this.show = this.filterCategories;
-            }
+            },
+            dropadd(e){
+                const name = e.target.name;
+                if (this.form.categories.includes(name)){
+                    this.form.categories = this.form.categories.filter(itm =>{
+                        return itm !== name;
+                    });
+                }
+                else{
+                    this.form.categories.push(name);
+                }
+
+            },
+            filebind(e){
+                this.form.cover = URL.createObjectURL(e.target.files[0]);
+            },
         },
         computed: {
             filterCategories(){
                 const show = [];
-                this.data.forEach(dt => {
+                this.db.forEach(dt => {
                     if(dt.categories.some(ca => this.filter.includes(ca))){
                         show.push(dt);
                     }
@@ -150,6 +227,7 @@
         box-sizing: border-box;
         min-height: 100vh;
         width: 100%;
+        position: relative;
     }
     .content.row{
         box-sizing: border-box;
@@ -215,9 +293,43 @@
         width: 100%;
         margin-left: 4%;
     }
+    .add.card{
+        font-weight: 500;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .formadd{
+        position: fixed;
+        width: 100vw;
+        height: 100vh;
+        z-index: 999;
+        background-color: rgba(0, 0, 0, 0.568);
+        padding: 5%;
+        margin: auto;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .formadd .mb-3{
+        width: 40vw;
+        height: auto;
+        z-index: 999;
+        padding: 5%;
+        background-color: whitesmoke;
+    }
+    .formadd .mb-3 input{
+        margin-bottom: 3%   ;
+    }
     @media only screen and (max-width: 950px){
         .content.row{
             padding: 0px 8%;
+        }
+
+        .formadd .mb-3{
+            min-width: 266px;
         }
     }
     @media only screen and (max-width: 440px){
@@ -270,6 +382,13 @@
         p.categories{
             text-align: left;
             margin: 0%;
+        }
+        .add.card h1{
+            width: 96vw;
+        }
+
+        .formadd .mb-3{
+            min-width: 80vw;
         }
     }
 </style>
