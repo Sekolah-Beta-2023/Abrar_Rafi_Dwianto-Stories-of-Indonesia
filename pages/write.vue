@@ -10,39 +10,43 @@
             </div>
         </div>
         <NavbarTemplate />
-        <section class="main container-fluid mt-3">
-            <div class="appearance container-fluid rounded shadow">
-                <div class="cover rounded-2">
-                    <label for="cvr" class="cover rounded"><input :style="{display:'none',}" type="file" name="img" id="cvr" value="Cover" accept="image/png, image/jpeg, image/jpg, image/svg" @change="bindcvr"><img :src="form.cover? cimg : require('~/src/img/transparent.png')" alt="cover" :style="{width:'100%', height:'100%', objectFit: 'cover'}" class="rounded"></label>
-                </div>
-                <div class="description container-fluid">
-                    <div class="wrap">
-                        <h1 @input="bindTitle" contenteditable="true" placeholder="Title" autofocus></h1>
-                        <p @input="bindDesc" contenteditable="true" placeholder="Description"></p>
+        <div>
+            <section class="main container-fluid mt-3">
+                <div class="appearance container-fluid rounded shadow">
+                    <div class="cover rounded-2">
+                        <label for="cvr" class="cover rounded"><input :style="{display:'none',}" type="file" name="img" id="cvr" value="Cover" accept="image/png, image/jpeg, image/jpg, image/svg" @change="bindcvr"><img :src="form.cover? cimg : require('~/src/img/transparent.png')" alt="cover" :style="{width:'100%', height:'100%', objectFit: 'cover'}" class="rounded"></label>
                     </div>
-                    <div class="dropdown">
-                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                            categories
-                        </button>
-                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                            <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Folk Lore" id="Folk"><label for="Folk">Folk Lore</label></div></li>
-                            <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Horror" id="Horror"><label for="Horror">Horror</label></div></li>
-                            <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="History" id="History"><label for="History">History</label></div></li>
-                            <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Legend" id="Legend"><label for="Legend">Legend</label></div></li>
-                            <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Myth" id="Myth"><label for="Myth">Myth</label></div></li>
-                        </ul>
+                    <div class="description container-fluid">
+                        <div class="wrap">
+                            <h1 @input="bindTitle" contenteditable="true" placeholder="Title" autofocus></h1>
+                            <p @input="bindDesc" contenteditable="true" placeholder="Description"></p>
+                        </div>
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
+                                categories
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Folk Lore" id="Folk"><label for="Folk">Folk Lore</label></div></li>
+                                <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Horror" id="Horror"><label for="Horror">Horror</label></div></li>
+                                <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="History" id="History"><label for="History">History</label></div></li>
+                                <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Legend" id="Legend"><label for="Legend">Legend</label></div></li>
+                                <li><div @click="dropadd" class="dropdown-item"><input type="checkbox" name="Myth" id="Myth"><label for="Myth">Myth</label></div></li>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div id="wrapcntn" class="rounded shadow mt-4">
-                <div class="content">
+                <div id="wrapcntn" class="rounded shadow mt-4">
+                    <div class="content">
 
+                    </div>
+                    <p class="controller rounded-2 container-fluid" @click="cpanel">add format</p>
+                    <button type="button" class="btn btn-primary" @click.prevent="bind">Save & Publish</button>
                 </div>
-                <p class="controller rounded-2 container-fluid" @click="cpanel">add format</p>
-                <button type="button" class="btn btn-primary" @click.prevent="bind">Save & Publish</button>
-            </div>
-        </section>
-        <FooterTemplate :style="{marginTop: '3%',}"/>
+            </section>
+            <FooterTemplate :style="{marginTop: '3%',}"/>
+        </div>
+
+        
     </div>
 </template>
 <script>

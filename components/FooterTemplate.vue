@@ -26,5 +26,6 @@
     }
     div footer p{
         font-size: 12px;
+        margin: 0%;
     }
 </style>
