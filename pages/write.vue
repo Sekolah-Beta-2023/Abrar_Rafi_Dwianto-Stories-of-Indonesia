@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="wraper">
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
                 <h1 class="heading1 mb-3" @click="adding('h1')">Heading 1</h1>
@@ -10,8 +10,9 @@
             </div>
         </div>
         <NavbarTemplate />
-        <div>
-            <section class="main container-fluid mt-3">
+        <main class="mt-2 mb-4">
+            <SidebarTemplate class="user" />
+            <section class="main container-fluid">
                 <div class="appearance container-fluid rounded shadow">
                     <div class="cover rounded-2">
                         <label for="cvr" class="cover rounded"><input :style="{display:'none',}" type="file" name="img" id="cvr" value="Cover" accept="image/png, image/jpeg, image/jpg, image/svg" @change="bindcvr"><img :src="form.cover? cimg : require('~/src/img/transparent.png')" alt="cover" :style="{width:'100%', height:'100%', objectFit: 'cover'}" class="rounded"></label>
@@ -43,20 +44,20 @@
                     <button type="button" class="btn btn-primary" @click.prevent="bind">Save & Publish</button>
                 </div>
             </section>
-            <FooterTemplate :style="{marginTop: '3%',}"/>
-        </div>
-
-        
+        </main>
+        <FooterTemplate />
     </div>
 </template>
 <script>
     import FooterTemplate from '~/components/FooterTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
+    import SidebarTemplate from '~/components/SidebarTemplate.vue'
 
     export default {
         components:{
             NavbarTemplate,
             FooterTemplate,
+            SidebarTemplate,
         },
         data() {
             return {
@@ -88,6 +89,11 @@
                 const node = document.createElement(elm);
                 node.setAttribute("contenteditable", true);
                 node.setAttribute('placeholder', elm);
+                node.addEventListener('keydown', e =>{
+                    if(node.innerHTML === '' &&  e.key === 'Backspace'){
+                        node.remove();
+                    }
+                })
                 cntn.appendChild(node);
             },
             // binding to form data
@@ -123,6 +129,23 @@
     body{
         background-color: rgb(226, 223, 223);
     }
+    .user{
+        display: flex !important;
+    }
+    .wraper{
+        width: 100vw;
+        height: 100vh;
+    }
+    main{
+        width: 100%;
+        height: calc(96% - ((49px + 6rem)));
+        display: flex;
+        flex-direction: row;
+        padding: 0% 2%;
+        align-items: stretch;
+        justify-content: stretch;
+    }
+
     [contenteditable]:empty::before{
         content: attr(placeholder);
         display: block;
@@ -134,7 +157,7 @@
     }
     .main{
         width: 100%;
-        min-height: 85vh;
+        min-height: auto;
     }
     .dropdown{
         display: flex;
@@ -161,7 +184,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        padding: 0%;
+        width: 100%;
         background-color: whitesmoke;
     }
     .description{
@@ -169,7 +192,7 @@
         flex-direction: row;
         justify-content: space-between;
         align-items: center;
-        width:85vw;
+        width:100%;
         padding: 0%;
     }
     .description h1, .description p{
@@ -199,19 +222,10 @@
 
 
     .controller{
-        /* 
-        height: 15vw;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        border: 0.3vw solid rgb(189, 189, 189);
-        font-size: 10vw; */
         width: 100%;
         color: #00000066;
         font-weight: 500;
         border-bottom: 1px solid #00000066;
-        /* padding: 0%; */
     }
     #cntrlWrap{
         width: 100vw;

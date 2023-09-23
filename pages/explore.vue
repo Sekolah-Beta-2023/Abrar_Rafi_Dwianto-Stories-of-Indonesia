@@ -31,7 +31,7 @@
         </div>
 
         <NavbarTemplate :class="islogin ? 'lgn1' : '' "/>
-        <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(96% - (4rem + 50px))'}">
+        <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(96% - (4rem + 46px))'}">
             <SidebarTemplate :class="islogin ? 'lgn2' : '' " />
             <div class="main">
                 <div class="box container-fluid">
@@ -129,7 +129,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: true,
+                islogin: false,
                 form: {
                     'cover':'',
                     'title':'',
@@ -232,6 +232,7 @@
     #start{
         width: 100vw;
         height: 100vh;
+        overflow: hidden;
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
@@ -345,10 +346,10 @@
         margin-bottom: 3%   ;
     }
     .lgn1{
-        display: none;
+        display: none !important;
     }
     .lgn2{
-        display: flex;
+        display: flex !important;
     }
     @media only screen and (max-width: 950px){
         .content.row{
@@ -363,10 +364,10 @@
             min-width: 266px;
         }
         .lgn1{
-            display: block;
+            display: block !important;
         }
         .lgn2{
-            display: none;
+            display: none !important;
         }
     }
     @media only screen and (max-width: 440px){

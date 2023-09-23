@@ -39,12 +39,12 @@
   }
   .navbar{
       border-bottom: 2px solid rgba(245, 245, 245, 0.116);
-      height: calc((25px + 1rem) *2);
+      height: calc((25px + 1rem) *2px);
+      padding: 1%;
   }
   .navbar .container-fluid{
-      margin-top: 1%;
-      width: 98%;
-      height: 90%;
+      width: 100%;
+      height: 100%;
       border-radius: 10px;
   }
   .navbar .container-fluid button.navbar-toggler{
