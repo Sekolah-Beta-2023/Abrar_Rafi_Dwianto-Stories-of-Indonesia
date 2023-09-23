@@ -31,46 +31,44 @@
         </div>
 
         <NavbarTemplate :class="islogin ? 'lgn1' : '' "/>
-        <div class="mainwrap">
+        <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(96% - (4rem + 50px))'}">
             <SidebarTemplate :class="islogin ? 'lgn2' : '' " />
-            <div>
-                <div class="main">
-                    <div class="box container-fluid">
-                        <div class="dropdown filter">
-                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
-                                Filter categories
-                            </button>
-                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="All" id="All" :checked="all"><label for="All">All</label></div></li>
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Folk Lore" id="Folk" checked><label for="Folk">Folk Lore</label></div></li>
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Horror" id="Horror" checked><label for="Horror">Horror</label></div></li>
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="History" id="History" checked><label for="History">History</label></div></li>
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Legend" id="Legend" checked><label for="Legend">Legend</label></div></li>
-                                <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Myth" id="Myth" checked><label for="Myth">Myth</label></div></li>
-                            </ul>
-                        </div>
-                        <form class="d-flex search">
-                            <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        </form>
+            <div class="main">
+                <div class="box container-fluid">
+                    <div class="dropdown filter">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="true">
+                            Filter categories
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="All" id="All" :checked="all"><label for="All">All</label></div></li>
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Folk Lore" id="Folk" checked><label for="Folk">Folk Lore</label></div></li>
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Horror" id="Horror" checked><label for="Horror">Horror</label></div></li>
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="History" id="History" checked><label for="History">History</label></div></li>
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Legend" id="Legend" checked><label for="Legend">Legend</label></div></li>
+                            <li><div class="dropdown-item"><input @click="dropfltr" type="checkbox" name="Myth" id="Myth" checked><label for="Myth">Myth</label></div></li>
+                        </ul>
                     </div>
-                    <div class="content row row-cols-auto g-4" :style="{padding: islogin ? '0px 4%': '0px 15%;'}">
-                        <div v-for="(dt,id) in show" :key="id" class="col">
-                            <div class="card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
-                                <div class="wrap" style="height: 45%; width: 100%; overflow: hidden;">
-                                    <img :src="dt.cover" width="200" height="110" class="card-img-top" alt="img" :style="{objectFit: 'cover'}">
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title">{{ dt.title }}</h5>
-                                    <p class="card-text categories"><small class="text-muted">{{ dt.categories.join(', ') }}</small></p>
-                                    <p class="card-text preview">{{ dt.content.slice(0,75)}}...</p>
-                                    <p class="card-text"><small class="text-muted">By {{ dt.author }}</small></p>
-                                </div>
+                    <form class="d-flex search">
+                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    </form>
+                </div>
+                <div class="content row row-cols-auto g-4" :style="{padding: islogin ? '0px 4%': ''}">
+                    <div v-for="(dt,id) in show" :key="id" class="col">
+                        <div class="card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
+                            <div class="wrap" style="height: 45%; width: 100%; overflow: hidden;">
+                                <img :src="dt.cover" width="200" height="110" class="card-img-top" alt="img" :style="{objectFit: 'cover'}">
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ dt.title }}</h5>
+                                <p class="card-text categories"><small class="text-muted">{{ dt.categories.join(', ') }}</small></p>
+                                <p class="card-text preview">{{ dt.content.slice(0,75)}}...</p>
+                                <p class="card-text"><small class="text-muted">By {{ dt.author }}</small></p>
                             </div>
                         </div>
-                        <div class="col">
-                            <div @click="addCntrlBtn" class="add card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
-                                <h1>+</h1>
-                            </div>
+                    </div>
+                    <div class="col">
+                        <div @click="addCntrlBtn" class="add card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
+                            <h1>+</h1>
                         </div>
                     </div>
                 </div>
@@ -131,7 +129,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: false,
+                islogin: true,
                 form: {
                     'cover':'',
                     'title':'',
@@ -237,32 +235,35 @@
         box-sizing: border-box;
         display: flex;
         flex-direction: column;
+        align-items: stretch;
+        justify-content: stretch;
     }
     .mainwrap{
         display: flex;
         flex-direction: row;
         justify-content: center;
-        align-items: center;
+        align-items: stretch;
         width: 100%;
         padding: 2% 3%;
     }
     .main{
         box-sizing: border-box;
-        height: 100vh;
         width: 100%;
+        height: 100%;
         position: relative;
         display: flex;
         flex-direction: column;
+        align-items: stretch;
     }
     .content.row{
         box-sizing: border-box;
         margin: 20px 0px 0px 0px;
         padding: 0px 4%;
-        height: 100%;
+        max-height: fit-content;
+        margin-bottom: auto;
         justify-content: center;
         background-color: rgb(226, 223, 223);
         position: relative;
-        overflow-x: hidden;
         overflow-y: auto;
     }
     .content.row h1{
@@ -335,7 +336,7 @@
     }
     .formadd .mb-3{
         width: 40vw;
-        height: 100%;
+        height: fit-content;
         z-index: 999;
         padding: 5%;
         background-color: whitesmoke;
@@ -352,8 +353,12 @@
     @media only screen and (max-width: 950px){
         .content.row{
             padding: 0px 8%;
+            width: 100%;
+            height: fit-content;
         }
-
+        .mainwrap{
+            height: calc(96% - (4rem + 50px)) !important;
+        }
         .formadd .mb-3{
             min-width: 266px;
         }
@@ -376,8 +381,9 @@
             margin-bottom: 3%;
         }
         .content.row{
-            padding: 0px 1%;
-            margin: 0px;
+            padding: 0px;
+            margin: 0%;
+            margin-bottom: auto;
         }
         .wrap{
             min-width: 80px;
@@ -422,8 +428,8 @@
             width: 96vw;
         }
         .formadd{
-            width: 105vw;
-            height: 105vh;
+            width: 100vw;
+            height: 100vh;
             transform: translate(-50%,-50%);
             top: 50%;
             left: 50%;

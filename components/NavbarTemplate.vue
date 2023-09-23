@@ -39,6 +39,7 @@
   }
   .navbar{
       border-bottom: 2px solid rgba(245, 245, 245, 0.116);
+      height: calc((25px + 1rem) *2);
   }
   .navbar .container-fluid{
       margin-top: 1%;

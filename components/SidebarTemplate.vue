@@ -12,10 +12,10 @@
 
 </script>
 <style>
-    .wrapper{
+    .wrapper.rounded{
         min-width: 250px;
         width: 30vw;
-        height: 100vh;
+        height: 100%;
         background-color: whitesmoke;
         display: none;
         flex-direction: column;
