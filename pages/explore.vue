@@ -30,9 +30,9 @@
             </form>
         </div>
 
-        <NavbarTemplate :class="islogin ? 'lgn1' : '' "/>
-        <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(96% - (4rem + 46px))'}">
-            <SidebarTemplate :class="islogin ? 'lgn2' : '' " />
+        <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn1' : '' "/>
+        <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(100% - (6rem + 20px + 1vh))'}">
+            <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn2' : '' " v-if="islogin" />
             <div class="main">
                 <div class="box container-fluid">
                     <div class="dropdown filter">
@@ -129,14 +129,18 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: false,
+                islogin: true,
                 form: {
                     'cover':'',
                     'title':'',
                     'content':'',
                     'author':'',
                     'categories':[]
-                }
+                },
+                user:{
+                    name: 'Abrar Rafi',
+                    image: require('@/src/img/bedawang.jpg')
+                },
             }
         },
         components: {
@@ -358,7 +362,7 @@
             height: fit-content;
         }
         .mainwrap{
-            height: calc(96% - (4rem + 50px)) !important;
+            height: calc(100% - (6rem + 20px + 1vh)) !important;
         }
         .formadd .mb-3{
             min-width: 266px;
