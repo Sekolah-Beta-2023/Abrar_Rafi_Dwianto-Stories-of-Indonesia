@@ -129,7 +129,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: true,
+                islogin: false,
                 form: {
                     'cover':'',
                     'title':'',
