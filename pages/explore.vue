@@ -89,35 +89,35 @@
             'content': 'Sint cupidatat cupidatat nulla aute aliqua quis nostrud duis tempor eu in. Labore commodo ad anim qui excepteur ea irure amet deserunt non mollit commodo. Adipisicing consequat eiusmod officia culpa elit anim id aute ex est commodo id fugiat dolore. Ea eu minim minim sit culpa qui laborum pariatur veniam aute nisi proident velit occaecat. Qui labore eiusmod aute elit. Irure laborum sit nostrud incididunt sit ipsum ex aute incididunt laborum.',
             'author': 'Pina',
             'categories': ['Folk Lore',],
-            'cover': require("@/src/img/timun-mas.jpg"),
+            'cover': require("@/static/img/timun-mas.jpg"),
         },
         {
             'title': 'Kuntilanak',
             'content': 'Esse occaecat duis est enim voluptate exercitation id amet velit voluptate. Dolore ex elit eiusmod id. Tempor eu incididunt non occaecat. Elit laborum officia magna velit voluptate amet magna mollit commodo nisi cupidatat adipisicing do dolore.',
             'author': 'Tirto Adhi',
             'categories': ['Horror',],
-            'cover': require("@/src/img/kunti.jpg"),
+            'cover': require("@/static/img/kunti.jpg"),
         },
         {
             'title': 'Bedawang',
             'content': 'Minim laboris adipisicing aute tempor aliquip ut enim. Dolore quis cupidatat proident occaecat dolor consectetur. Nostrud irure Lorem deserunt cillum Lorem. Qui reprehenderit ut reprehenderit consectetur ad nostrud deserunt cillum reprehenderit aliquip eiusmod. Lorem culpa consequat consequat Lorem officia reprehenderit duis aliqua et quis in laboris dolore. Adipisicing esse Lorem deserunt cupidatat sunt occaecat voluptate eu esse occaecat. Aliquip et consequat eu esse et non velit dolore Lorem aute id excepteur adipisicing aliquip.',
             'author': 'Kaluna',
             'categories': ['Myth',],
-            'cover': require("@/src/img/bedawang.jpg"),
+            'cover': require("@/static/img/bedawang.jpg"),
         },
         {
             'title': 'Palapa',
             'content': 'Minim laboris adipisicing aute tempor aliquip ut enim. Dolore quis cupidatat proident occaecat dolor consectetur. Nostrud irure Lorem deserunt cillum Lorem. Qui reprehenderit ut reprehenderit consectetur ad nostrud deserunt cillum reprehenderit aliquip eiusmod. Lorem culpa consequat consequat Lorem officia reprehenderit duis aliqua et quis in laboris dolore. Adipisicing esse Lorem deserunt cupidatat sunt occaecat voluptate eu esse occaecat. Aliquip et consequat eu esse et non velit dolore Lorem aute id excepteur adipisicing aliquip.',
             'author': 'Rama',
             'categories': ['History',],
-            'cover': require("@/src/img/palapa.jpg"),
+            'cover': require("@/static/img/palapa.jpg"),
         },
         {
             'title': 'Roro Jongrang',
             'content': 'Minim reprehenderit sit labore eu aute non fugiat. Ipsum cillum ex eu irure exercitation aliqua deserunt duis exercitation elit labore officia ad. Reprehenderit et sint minim incididunt occaecat Lorem ex in magna nulla nulla sint. Irure incididunt culpa qui incididunt eiusmod id cupidatat. Mollit elit nostrud dolore deserunt.',
             'author': 'Rama',
             'categories': ['Myth', 'Legend'],
-            'cover': require("@/src/img/roro-jonggrang.jpg"),
+            'cover': require("@/static/img/roro-jonggrang.jpg"),
         },
     ]
 
@@ -129,7 +129,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: true,
+                islogin: false,
                 form: {
                     'cover':'',
                     'title':'',
@@ -139,7 +139,7 @@
                 },
                 user:{
                     name: 'Abrar Rafi',
-                    image: require('@/src/img/bedawang.jpg')
+                    image: '@/static/img/bedawang.jpg'
                 },
             }
         },
@@ -231,7 +231,7 @@
     }
     @font-face {
         font-family: 'boutiques of merauke';
-        src: url("~/src/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
+        src: url("~/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
     }
     #start{
         width: 100vw;

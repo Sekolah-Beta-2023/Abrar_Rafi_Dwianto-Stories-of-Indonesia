@@ -61,7 +61,7 @@
 <style>
   @font-face {
       font-family: 'boutiques of merauke';
-      src: url("@/src/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
+      src: url("@/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
   }
   .navbar{
       border-bottom: 2px solid rgba(245, 245, 245, 0.116);
@@ -83,6 +83,12 @@
   .ofcanvas-header{
     position: relative;
     width: 100%;
+  }
+  .offcanvas-backdrop{
+    width: 200vw;
+    height: 200vh;
+    top: calc(50% - 100vh);
+    left: calc(50% - 100vw);
   }
   button.btn-close{
     margin-left: calc(50% - 1rem);

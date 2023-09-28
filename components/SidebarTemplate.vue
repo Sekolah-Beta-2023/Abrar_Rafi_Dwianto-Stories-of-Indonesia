@@ -35,7 +35,7 @@
 <style>
     @font-face {
         font-family: 'boutiques of merauke';
-        src: url("@/src/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
+        src: url("@/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
     } 
     .wrapper.rounded{
         min-width: 250px;
