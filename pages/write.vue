@@ -73,7 +73,7 @@
         data() {
             return {
                 controllPanel: false,
-                islogin: true,
+                islogin: false,
                 form: {
                     'cover': '',
                     'title': '',
