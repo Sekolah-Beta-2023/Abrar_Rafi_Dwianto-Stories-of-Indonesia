@@ -8,21 +8,36 @@
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-            <div class="offcanvas-header">
-              <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-            </div>
             <div class="offcanvas-body">
-              <ul class="navbar-nav justify-content-end flex-grow-1 pe-2">
+              <ul v-if="!islogin" class="navbar-nav justify-content-end flex-grow-1 pe-2">
                 <li class="nav-item h" >
-                  <a :class="this.$route.path === '/' ? 'nav-link active':'nav-link'" aria-current="page" href=".">Home</a>
+                  <a :class="this.$route.path === '/' ? 'nav-link active':'nav-link'" href=".">Home</a>
                 </li>
                 <li class="nav-item a">
                   <a :class="this.$route.path === '/about' ? 'nav-link active':'nav-link'" href="/about">About</a>
                 </li>
                 <li class="nav-item e">
-                  <a :class="this.$route.path === '/explore' ? 'nav-link active':'nav-link'" href="/explore" class="nav-link">Explore</a>
+                  <a :class="this.$route.path === '/explore' ? 'nav-link active':'nav-link'" href="/explore">Explore</a>
                 </li>
               </ul>
+              <ul v-if="islogin" class="navbar-nav justify-content-end flex-grow-1 pe-2 nb">
+                <div class="profile mb-2">
+                  <img :src="profilePhoto" alt="" class="rounded-circle">
+                  <h6>{{ profileName }}</h6>
+                </div>
+                <li class="nav-item h" >
+                  <a :class="this.$route.path === '/explore' ? 'active':''" class="nav-link rounded bi bi-search" href="/explore">Explore</a>
+                </li>
+                <li class="nav-item a">
+                  <a :class="this.$route.path === '/mystories' ? 'active':''" class="nav-link rounded bi bi-book" href="/mystories">My Stories</a>
+                </li>
+                <li class="nav-item e">
+                  <a :class="this.$route.path === '/profile' ? 'active':''" class="nav-link rounded bi bi-person-fill" href="/profile">My Profile</a>
+                </li>
+              </ul>
+            </div>
+            <div class="offcanvas-header">
+              <button type="button" class="btn-close text-reset rounded-circle" data-bs-dismiss="offcanvas" aria-label="Close"></button>
             </div>
           </div>
         </div>
@@ -31,19 +46,31 @@
 </template>
 
 <script>
+  export default{
+    data(){
+      return{
+      }
+    },
+    props: {
+      islogin: Boolean,
+      profilePhoto: String,
+      profileName: String,
+    }
+  }
 </script>
 <style>
   @font-face {
       font-family: 'boutiques of merauke';
-      src: url("@/src/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
+      src: url("@/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
   }
   .navbar{
       border-bottom: 2px solid rgba(245, 245, 245, 0.116);
+      height: calc(3rem + 8px + 1vh);
+      padding: 1vh;
   }
   .navbar .container-fluid{
-      margin-top: 1%;
-      width: 98%;
-      height: 90%;
+      width: 100%;
+      height: 100%;
       border-radius: 10px;
   }
   .navbar .container-fluid button.navbar-toggler{
@@ -53,7 +80,46 @@
       font-family: "boutiques of merauke";
       font-size: 25px;
   }
-  .offcanvas-backdrop{
-      display: none !important;
+  .ofcanvas-header{
+    position: relative;
+    width: 100%;
   }
+  .offcanvas-backdrop{
+    width: 200vw;
+    height: 200vh;
+    top: calc(50% - 100vh);
+    left: calc(50% - 100vw);
+  }
+  button.btn-close{
+    margin-left: calc(50% - 1rem);
+    margin-bottom: 1rem !important;
+    border: 3px solid #00000066;
+  }
+  .nb .nav-item .nav-link{
+    margin: 2% 0%;
+    padding: 0%;
+    padding-left: 2%;
+    width: 100%;
+  }
+  .nb .nav-item .nav-link.active{
+    background-color: rgb(185, 185, 185);
+  }
+  .nb .nav-item .nav-link::before{
+      margin-right: 3%;
+  }
+  .nb .profile{
+    border-bottom: 1px solid #00000066;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding-bottom: 3%;
+  }
+  @media only screen and (min-width: 412px){
+    .offcanvas{
+      min-width: 270px;
+      max-width: 30vw;
+    }
+  }
+
 </style>

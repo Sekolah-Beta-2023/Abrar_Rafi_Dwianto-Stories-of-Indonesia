@@ -24,7 +24,7 @@
 <style>
   @font-face {
     font-family: 'boutiques of merauke';
-    src: url("@/src/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
+    src: url("@/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");
   }
   body{
     background-color: rgb(226, 223, 223);
