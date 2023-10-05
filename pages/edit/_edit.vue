@@ -1,5 +1,6 @@
 <template>
     <div class="wraper">
+        <loadingTemplate v-if="loading"/>
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
                 <h1 class="heading1 mb-3" @click="adding('h1', 'Heading 1')">Heading 1</h1>
@@ -9,9 +10,9 @@
                 <p class="paragraph mb-3" @click="adding('img', 'image')"> image </p>
             </div>
         </div>
-        <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgnn' : ''"/>
+        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
                     <div class="appearance container-fluid rounded shadow">
@@ -19,7 +20,7 @@
                             <label for="cvr" class="cover rounded">
                                 <input :style="{display:'none',}" 
                                 type="file" name="img" id="cvr" value="Cover" accept="image/png, image/jpeg, image/jpg, image/svg" 
-                                @change="bindcvr"><img :src="form.cover" alt="cover" 
+                                @change="bindcvr"><img :src="form.cover? cimg : require('@/static/img/transparent.png')" alt="cover" 
                                 :style="{width:'100%', height:'100%', objectFit: 'cover'}" class="rounded">
                             </label>
                         </div>
@@ -63,47 +64,60 @@
     import FooterTemplate from '~/components/FooterTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
     import SidebarTemplate from '~/components/SidebarTemplate.vue'
+    import LoadingTemplate from '~/components/LoadingTemplate.vue'
 
     export default {
         components:{
             NavbarTemplate,
             FooterTemplate,
             SidebarTemplate,
+            LoadingTemplate,
         },
         data() {
             return {
                 controllPanel: false,
-                islogin: false,
-                form: {
-                    "cover": "bedawang.jpg",
-                    "title": "Lorem Ipsum",
-                    "description": "Lorem ipsum aliquam ante consectetur integer sollicitudin, lobortis leo suspendisse metus convallis.",
-                    "categories": [
-                        "Folk Lore",
-                        "History",
-                        "Myth"
-                    ],
-                    "content": "<p placeholder=\"Paragraph\">Lorem ipsum aliquam nam felis aenean ipsum massa nibh, eget vestibulum cras tempus sodales neque scelerisque nisi, fusce urna vel egestas nec a donec. Tristique quam fermentum nibh neque fusce orci massa ullamcorper quisque class, adipiscing neque est primis quisque urna fermentum maecenas tristique. Eget etiam aenean quam integer condimentum consectetur placerat amet nunc, vitae vehicula consequat nam lacus porta himenaeos orci, rhoncus dictumst primis quisque nibh sed taciti tellus.</p><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/bNLAegmm_D0d\" alt=\"bNLAegmm_D0d\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum ullamcorper erat sed eget elit aliquam arcu nec praesent, pellentesque sapien eget duis mollis donec fusce primis nisl, iaculis nullam per cursus interdum integer lobortis suscipit eros. Magna molestie phasellus fames fermentum maecenas non aenean ullamcorper tristique eros, inceptos praesent vitae rhoncus nostra laoreet potenti adipiscing vestibulum dictumst, morbi feugiat sociosqu amet etiam quam velit etiam vestibulum. Diam nibh faucibus feugiat erat convallis ullamcorper dictum, odio nisl lacinia nulla purus egestas felis, condimentum habitasse nisi curabitur sit hac.<div><br></div><div>Lorem ipsum blandit cras sapien blandit donec lobortis magna, fermentum ad vulputate volutpat dolor sem proin libero pharetra, pellentesque etiam bibendum volutpat donec duis convallis. Suscipit fringilla tempus augue feugiat scelerisque dapibus nostra, dui quam varius adipiscing gravida morbi orci facilisis, dictumst auctor id congue vel amet. Purus platea vitae habitasse platea justo varius suscipit quis suscipit taciti sodales, blandit faucibus sit aenean felis faucibus lacinia quam molestie primis aenean, egestas aliquam risus sagittis venenatis posuere semper aliquam venenatis tempor.<br></div></p><h2 placeholder=\"Heading 2\">Lorem</h2><p placeholder=\"Paragraph\">Lorem ipsum faucibus facilisis cubilia vivamus cursus torquent ac auctor, a eleifend risus condimentum in lobortis bibendum erat at turpis, ut massa fringilla volutpat tortor nisl ante sagittis. Ipsum litora purus rutrum himenaeos donec purus viverra tellus tempus, hendrerit tellus sagittis ad pellentesque aliquam lectus semper torquent, lectus nec ante feugiat dui aenean aliquet posuere. Faucibus vehicula malesuada eleifend ac rhoncus fermentum interdum inceptos, sit felis quis laoreet feugiat euismod congue.</p><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/PJ1QXr6Ka7-X\" alt=\"PJ1QXr6Ka7-X\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum lorem ultrices mollis quis gravida porta varius, porta pulvinar est primis at morbi pretium volutpat, hac taciti eu integer netus est ante. Fermentum torquent faucibus diam mauris nibh quis fames lorem, euismod sollicitudin pharetra ligula eros curabitur vulputate, vitae torquent faucibus lorem tortor a dui. Euismod molestie primis aliquet hendrerit interdum feugiat rhoncus sodales est etiam semper, donec pretium leo quisque tincidunt condimentum sollicitudin ultrices aliquam taciti litora, nulla magna fusce sem semper rhoncus eros convallis ut elit.</p><h2 placeholder=\"Heading 2\">Ipsum</h2><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/jffrQ-b6Zrzv\" alt=\"jffrQ-b6Zrzv\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum etiam vivamus habitant dolor nullam phasellus mauris, sed condimentum gravida imperdiet lectus netus. Justo neque sit tempus sed pellentesque pretium phasellus risus placerat condimentum et habitasse ante, quis sodales purus duis ac cubilia amet ullamcorper maecenas consectetur gravida. Purus ipsum nostra integer suscipit tellus fusce nisi sodales lectus interdum class, vehicula aliquam rutrum laoreet sed adipiscing odio magna dapibus nisl. Erat placerat donec ut cras euismod urna, faucibus sociosqu lacus porttitor neque sed, ad ut diam bibendum dapibus.</p>",
-                    "author": "Abrar Rafi",
-                    "files": []
-                },
-                user: {
-                    name: 'Abrar Rafi',
-                    image: require('@/static/img/bedawang.jpg'),
-                },
+                islogin: true,
+                form: {},
+                user: this.$store.state.apiControl.user,
                 cimg: '',
                 target: '',
+                loading: false,
+                cvrLink: '',
+                compareFiles: [],
             }
+        },
+        async fetch(){
+            try {
+                await this.$axios.get(`/rest/v1/stories?id=eq.${this.$route.params.edit}&select=*`,{
+                    'headers':{
+                        "apikey": this.user.token,
+                    }
+                }).then(res=>{
+                    this.form = {
+                        ...res.data[0],
+                        'cvrFile': '',
+                        'files': [],
+                        };
+                    this.cimg = this.form.cover;
+                    this.preparingForEdit();
+                });
+            } catch (error) {
+                console.log(error);
+            }
+        },
+        created(){
+            
+        },
+        mounted() {
+            
         },
         computed:{
             
         },
-        mounted() {
-            this.preparingForEdit();
-        },
         methods:{
             preparingForEdit(){
                 // set categories checkbox
+                console.log(this.form);
                 document.querySelectorAll('.dropdown .dropdown-menu input').forEach((itm)=>{
                     if (this.form.categories.includes(itm.name)){
                         itm.checked = true;
@@ -117,14 +131,21 @@
                 cntn.querySelectorAll('[placeholder]').forEach((itm)=>{
                     itm.setAttribute('contenteditable', true);
                 });
-                cntn.querySelectorAll('div.cimg').forEach((itm)=>{
+                this.cvrLink = this.form.cover;
+                cntn.querySelectorAll('div.cimg').forEach((itm,i)=>{
+                    this.compareFiles.push([itm.querySelector('.cntnImg').alt, itm.querySelector('.cntnImg')]);
                     const button = document.createElement('button');
                     button.setAttribute('class', 'cImgBtn btn btn-md rounded-circle bi bi-x-circle');
-                    button.addEventListener('click', this.cntnImgDel);
+                    
+                    button.addEventListener('click', e=>{
+                        this.compareFiles[i][1] = false;
+
+                        this.cntnImgDel(e);
+                    });
 
                     itm.appendChild(button);
                     itm.querySelector('.cntnImg').addEventListener('click', this.setUp);
-                    console.log(itm);
+
                 });
             },
             cpanel(){
@@ -178,13 +199,13 @@
                     this.target.parentElement.setAttribute('class', 'cimg rounded');
 
                     document.querySelector('img::after');
-                    this.form.files.push(file);
+                    this.form.files.push([file,this.target]);
                 }
             },
             cntnImgDel(e){
-                const name = e.target.previousElementSibling.alt;
+                const name = e.target.previousElementSibling;
                 this.form.files.forEach((f,i) => {
-                    if (f.name === name){
+                    if (f[1] === name){
                         this.form.files.splice(i,1);
                     }
                 });
@@ -193,14 +214,9 @@
 
             bindcvr(e){
                 if (e.target.files.length > 0){
-                    const file = new File([e.target.files[0]], nanoid(12), {type: e.target.files[0].type})
-                    this.form.files.forEach((f,i) => {
-                        if (f.name === this.form.cover){
-                            this.form.files.splice(i,1);
-                        }
-                    });
+                    const file = new File([e.target.files[0]], nanoid(12), {type: e.target.files[0].type});
                     this.form.cover = file.name;
-                    this.form.files.push(file);
+                    this.form.cvrFile = file;
                     this.cimg = URL.createObjectURL(file);
                 }
             },
@@ -216,27 +232,141 @@
                 }
             },
             bind(){
+                this.loading = true;
                 const content = document.querySelector('.content');
                 let value;
-
+                
                 value = content.querySelectorAll("[contenteditable]");
                 value.forEach(element => {
                     element.removeAttribute('contenteditable');
                 });
-
+                
                 value = content.querySelectorAll('.cimg .cntnImg');
                 value.forEach(element => {
+                    console.log(element);
                     element.nextElementSibling.remove();
                     element.removeAttribute('on-click');
                     element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/${element.alt}`;
                 });
-
-                this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/${this.form.cover}`;
+                
+                if(this.cvrLink !== this.form.cover){
+                    this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/stories/${this.form.cover}`;
+                }
                 this.form.content = document.querySelector('.content').innerHTML;
                 this.form.author = this.user.name;
                 console.log(this.form);
+                this.storeData();
+                
             },
-        },
+            async storeData(){
+                // check unused file in server and delete it
+                let completeDel = 0;
+                let complete = 0;
+                if ( this.cvrLink !== this.form.cover ){
+                    this.cvrLink = this.cvrLink.split('/');
+                    this.cvrLink = this.cvrLink[-1];
+                    try {
+                        await this.$axios.delete(`/storage/v1/object/storiesoi/stories/${this.cvrLink}`, {
+                            'headers':{
+                                'Authorization': `Bearer ${this.user.token}`,
+                            },
+                        });
+                    } catch (error) {
+                        console.log(error);
+                    }
+                }
+                if (this.compareFiles.length > 0){
+                    this.compareFiles.forEach(async itm=>{
+                        if ((itm[1] === false || itm[0] !== itm[1].alt) && itm[0] !== ''){
+                            try {
+                                await this.$axios.delete(`/storage/v1/object/storiesoi/content/${itm[0]}`, {
+                                    'headers':{
+                                        'Authorization': `Bearer ${this.user.token}`,
+                                    },
+                                });
+                            } catch (error) {
+                                console.log(error);
+                            }finally{
+                                completeDel++;
+                                if (completeDel === this.compareFiles.length){
+                                    completeDel = true;
+                                }
+                                console.log(complete, completeDel);
+                            }
+                        }
+                        else{
+                            completeDel++;
+                            if (completeDel === this.compareFiles.length) {
+                                completeDel = true;
+                            }
+                            console.log(complete, completeDel);
+                        }
+                    })
+                }else {completeDel = true;}
+
+                // store text data
+                try {
+                    await this.$axios.patch(`/rest/v1/stories?id=eq.${this.$route.params.edit}`,{
+                        'cover': this.form.cover,
+                        'title': this.form.title,
+                        'description': this.form.description,
+                        'categories': this.form.categories,
+                        'content': this.form.content,
+                        'author': this.form.author,
+                    },{
+                        'headers':{
+                            'apikey': this.user.token,
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+
+                // store file
+                let file = new FormData();
+                try {
+                    // cover
+                    if (this.form.cvrFile !== ''){
+                        file.append('file', this.form.cvrFile);
+                        await this.$axios.post(`/storage/v1/object/storiesoi/stories/${this.form.cvrFile.name}`, file, {
+                            'headers':{
+                                'Authorization': `Bearer ${this.user.token}`,
+                            }
+                        });
+                    }
+                }
+                catch(err){
+                    console.log(err);
+                }
+                // content 
+                if (this.form.files.length > 0){
+                    this.form.files.forEach(async (itm,i)=>{
+                        try{
+                            file = new FormData();
+                            file.append(`file${i}`, itm[0]);
+                            itm[1].alt = itm[0].name;
+                            await this.$axios.post(`/storage/v1/object/storiesoi/content/${itm[0].name}`, file, {
+                                'headers':{
+                                    'Authorization': `Bearer ${this.user.token}`,
+                                }
+                            });
+                        }catch (error) {
+                            console.log(error);
+                        }finally{
+                            complete++;
+                            if (complete === this.form.files.length && completeDel === true){
+                                location.href = '/explore';
+                            }
+                        }
+                    });
+                    console.log(complete, completeDel, this.form.files.length);
+                }else{
+                    location.href = '/explore';
+                    console.log(complete, completeDel, this.form.files.length);
+                }
+                
+            },
+        }
     }
 </script>
 <style>
@@ -482,6 +612,33 @@
         }
     }
 </style>
+
+<!-- {
+    "cover": "",
+    "title": "Lorem Ipsum",
+    "description": "lorem ipsum sit amet dolor constrestus",
+    "categories": [],
+    "content": "<p placeholder=\"Paragraph\"><div>Lorem ipsum etiam netus at sollicitudin pharetra sed arcu euismod eros, hac velit sem habitant nulla congue sociosqu eget quisque urna, pulvinar proin viverra nostra proin odio donec nunc fringilla. Morbi bibendum venenatis curabitur morbi nullam vulputate nibh enim quisque per, accumsan sem commodo lectus eros porta augue felis nulla, interdum a tempor dictumst felis himenaeos nibh accumsan potenti. Pulvinar primis libero urna varius potenti tortor tempus tristique pharetra, semper vehicula est consectetur mi hac egestas quam facilisis molestie, nulla pulvinar volutpat fusce egestas ac elementum interdum.</div><div><br></div><div>Metus faucibus consequat est commodo mauris potenti commodo odio enim ut sodales semper praesent nunc malesuada interdum, id phasellus nostra quisque elementum nunc proin diam duis litora conubia venenatis morbi aenean arcu. Commodo tempor dolor curae quam ultricies ac porttitor duis praesent bibendum ante augue vivamus posuere vehicula ornare ultrices, nec vel mattis dui fusce a eleifend in donec fermentum conubia condimentum nunc non sit.</div></p>",
+    "author": "Abrar Rafi"
+} -->
+
+<!-- {
+    "cover": "bedawang.jpg",
+    "title": "Lorem Ipsum",
+    "description": "Lorem ipsum aliquam ante consectetur integer sollicitudin, lobortis leo suspendisse metus convallis.",
+    "categories": [
+        "Folk Lore",
+        "History",
+        "Myth"
+    ],
+    "content": "<p placeholder=\"Paragraph\">Lorem ipsum aliquam nam felis aenean ipsum massa nibh, eget vestibulum cras tempus sodales neque scelerisque nisi, fusce urna vel egestas nec a donec. Tristique quam fermentum nibh neque fusce orci massa ullamcorper quisque class, adipiscing neque est primis quisque urna fermentum maecenas tristique. Eget etiam aenean quam integer condimentum consectetur placerat amet nunc, vitae vehicula consequat nam lacus porta himenaeos orci, rhoncus dictumst primis quisque nibh sed taciti tellus.</p><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/bNLAegmm_D0d\" alt=\"bNLAegmm_D0d\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum ullamcorper erat sed eget elit aliquam arcu nec praesent, pellentesque sapien eget duis mollis donec fusce primis nisl, iaculis nullam per cursus interdum integer lobortis suscipit eros. Magna molestie phasellus fames fermentum maecenas non aenean ullamcorper tristique eros, inceptos praesent vitae rhoncus nostra laoreet potenti adipiscing vestibulum dictumst, morbi feugiat sociosqu amet etiam quam velit etiam vestibulum. Diam nibh faucibus feugiat erat convallis ullamcorper dictum, odio nisl lacinia nulla purus egestas felis, condimentum habitasse nisi curabitur sit hac.<div><br></div><div>Lorem ipsum blandit cras sapien blandit donec lobortis magna, fermentum ad vulputate volutpat dolor sem proin libero pharetra, pellentesque etiam bibendum volutpat donec duis convallis. Suscipit fringilla tempus augue feugiat scelerisque dapibus nostra, dui quam varius adipiscing gravida morbi orci facilisis, dictumst auctor id congue vel amet. Purus platea vitae habitasse platea justo varius suscipit quis suscipit taciti sodales, blandit faucibus sit aenean felis faucibus lacinia quam molestie primis aenean, egestas aliquam risus sagittis venenatis posuere semper aliquam venenatis tempor.<br></div></p><h2 placeholder=\"Heading 2\">Lorem</h2><p placeholder=\"Paragraph\">Lorem ipsum faucibus facilisis cubilia vivamus cursus torquent ac auctor, a eleifend risus condimentum in lobortis bibendum erat at turpis, ut massa fringilla volutpat tortor nisl ante sagittis. Ipsum litora purus rutrum himenaeos donec purus viverra tellus tempus, hendrerit tellus sagittis ad pellentesque aliquam lectus semper torquent, lectus nec ante feugiat dui aenean aliquet posuere. Faucibus vehicula malesuada eleifend ac rhoncus fermentum interdum inceptos, sit felis quis laoreet feugiat euismod congue.</p><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/PJ1QXr6Ka7-X\" alt=\"PJ1QXr6Ka7-X\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum lorem ultrices mollis quis gravida porta varius, porta pulvinar est primis at morbi pretium volutpat, hac taciti eu integer netus est ante. Fermentum torquent faucibus diam mauris nibh quis fames lorem, euismod sollicitudin pharetra ligula eros curabitur vulputate, vitae torquent faucibus lorem tortor a dui. Euismod molestie primis aliquet hendrerit interdum feugiat rhoncus sodales est etiam semper, donec pretium leo quisque tincidunt condimentum sollicitudin ultrices aliquam taciti litora, nulla magna fusce sem semper rhoncus eros convallis ut elit.</p><h2 placeholder=\"Heading 2\">Ipsum</h2><div class=\"cimg rounded\"><img src=\"https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/jffrQ-b6Zrzv\" alt=\"jffrQ-b6Zrzv\" class=\"cntnImg rounded\">\n                                    </div><p placeholder=\"Paragraph\">Lorem ipsum etiam vivamus habitant dolor nullam phasellus mauris, sed condimentum gravida imperdiet lectus netus. Justo neque sit tempus sed pellentesque pretium phasellus risus placerat condimentum et habitasse ante, quis sodales purus duis ac cubilia amet ullamcorper maecenas consectetur gravida. Purus ipsum nostra integer suscipit tellus fusce nisi sodales lectus interdum class, vehicula aliquam rutrum laoreet sed adipiscing odio magna dapibus nisl. Erat placerat donec ut cras euismod urna, faucibus sociosqu lacus porttitor neque sed, ad ut diam bibendum dapibus.</p>",
+    "author": "Abrar Rafi",
+    "files": [
+        {},
+        {},
+        {}
+    ]
+} -->
 
 <!-- {
     "cover": "",

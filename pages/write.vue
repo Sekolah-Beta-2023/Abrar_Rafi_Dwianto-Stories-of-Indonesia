@@ -1,5 +1,6 @@
 <template>
     <div class="wraper">
+        <loadingTemplate v-if="loading"/>
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
                 <h1 class="heading1 mb-3" @click="adding('h1', 'Heading 1')">Heading 1</h1>
@@ -9,9 +10,9 @@
                 <p class="paragraph mb-3" @click="adding('img', 'image')"> image </p>
             </div>
         </div>
-        <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgnn' : ''"/>
+        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
                     <div class="appearance container-fluid rounded shadow">
@@ -63,17 +64,19 @@
     import FooterTemplate from '~/components/FooterTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
     import SidebarTemplate from '~/components/SidebarTemplate.vue'
+    import LoadingTemplate from '~/components/LoadingTemplate.vue'
 
     export default {
         components:{
             NavbarTemplate,
             FooterTemplate,
             SidebarTemplate,
+            LoadingTemplate,
         },
         data() {
             return {
                 controllPanel: false,
-                islogin: false,
+                islogin: true,
                 form: {
                     'cover': '',
                     'title': '',
@@ -81,14 +84,13 @@
                     'categories': [],
                     'content': '',
                     'author': '',
+                    'cvrFile': '',
                     'files': [],
                 },
-                user: {
-                    name: 'Abrar Rafi',
-                    image: require('@/static/img/bedawang.jpg'),
-                },
+                user: this.$store.state.apiControl.user,
                 cimg: '',
                 target: '',
+                loading: false,
             }
         },
         mounted() {
@@ -149,13 +151,13 @@
                     this.target.parentElement.setAttribute('class', 'cimg rounded');
 
                     document.querySelector('img::after');
-                    this.form.files.push(file);
+                    this.form.files.push([file,this.target]);
                 }
             },
             cntnImgDel(e){
-                const name = e.target.previousElementSibling.alt;
+                const name = e.target.previousElementSibling;
                 this.form.files.forEach((f,i) => {
-                    if (f.name === name){
+                    if (f[1] === name){
                         this.form.files.splice(i,1);
                     }
                 });
@@ -164,14 +166,9 @@
 
             bindcvr(e){
                 if (e.target.files.length > 0){
-                    const file = new File([e.target.files[0]], nanoid(12), {type: e.target.files[0].type})
-                    this.form.files.forEach((f,i) => {
-                        if (f.name === this.form.cover){
-                            this.form.files.splice(i,1);
-                        }
-                    });
+                    const file = new File([e.target.files[0]], nanoid(12), {type: e.target.files[0].type});
                     this.form.cover = file.name;
-                    this.form.files.push(file);
+                    this.form.cvrFile = file;
                     this.cimg = URL.createObjectURL(file);
                 }
             },
@@ -187,25 +184,91 @@
                 }
             },
             bind(){
+                this.loading = true;
                 const content = document.querySelector('.content');
                 let value;
-
+                
                 value = content.querySelectorAll("[contenteditable]");
                 value.forEach(element => {
                     element.removeAttribute('contenteditable');
                 });
-
+                
                 value = content.querySelectorAll('.cimg .cntnImg');
                 value.forEach(element => {
+                    console.log(element);
                     element.nextElementSibling.remove();
                     element.removeAttribute('on-click');
                     element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/${element.alt}`;
                 });
-
-                this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/${this.form.cover}`;
+                
+                this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/stories/${this.form.cover}`;
                 this.form.content = document.querySelector('.content').innerHTML;
                 this.form.author = this.user.name;
                 console.log(this.form);
+                this.storeData();
+                
+            },
+            async storeData(){
+                // store text data
+                try {
+                    await this.$axios.post('/rest/v1/stories',{
+                        'cover': this.form.cover,
+                        'title': this.form.title,
+                        'description': this.form.description,
+                        'categories': this.form.categories,
+                        'content': this.form.content,
+                        'author': this.form.author,
+                    },{
+                        'headers':{
+                            'apikey': this.user.token,
+                        }
+                    })
+                } catch (error) {
+                    console.log(error);
+                }
+
+                // store file
+                let file = new FormData();
+                try {
+                    // cover
+                    if (this.form.cvrFile !== ''){
+                        file.append('file', this.form.cvrFile);
+                        await this.$axios.post(`/storage/v1/object/storiesoi/stories/${this.form.cvrFile.name}`, file, {
+                            'headers':{
+                                'Authorization': `Bearer ${this.user.token}`,
+                            }
+                        });
+                    }
+                }
+                catch(err){
+                    console.log('error cover', err);
+                }
+                // content 
+                let complete=0;
+                if (this.form.files.length > 0){
+                    this.form.files.forEach(async (itm,i)=>{
+                        try{
+                            file = new FormData();
+                            file.append(`file${i}`, itm[0]);
+                            itm[1].alt = itm[0].name;
+                            await this.$axios.post(`/storage/v1/object/storiesoi/content/${itm[0].name}`, file, {
+                                'headers':{
+                                    'Authorization': `Bearer ${this.user.token}`,
+                                }
+                            });
+                        }catch (error) {
+                            console.log('error content',error);
+                        }finally{
+                            complete++;
+                            if (complete === this.form.files.length){
+                                location.href = '/explore';
+                            }
+                        }
+                    });
+                }else{
+                    location.href = '/explore';
+                }
+                
             },
         }
     }

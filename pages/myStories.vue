@@ -37,6 +37,11 @@
                             </div>
                         </div>
                     </nuxt-link>
+                    <nuxt-link class="col" to="/write">
+                        <div class="add card shadow" :style="{width: 'calc(8rem + 6vw)', height:'100%'}">
+                            <h1>+</h1>
+                        </div>
+                    </nuxt-link>
                 </div>
             </div>
         </div>
@@ -74,7 +79,7 @@
             SidebarTemplate,
         },
         async fetch(){
-            await this.$axios.get('/rest/v1/stories?select=*',{
+            await this.$axios.get(`/rest/v1/stories?author=eq${this.user.name}.&select=*`,{
                 'headers': {
                     'apikey': this.user.token,
                 }

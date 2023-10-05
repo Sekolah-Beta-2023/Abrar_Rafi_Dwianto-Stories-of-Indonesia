@@ -22,14 +22,14 @@
               </ul>
               <ul v-if="islogin" class="navbar-nav justify-content-end flex-grow-1 pe-2 nb">
                 <div class="profile mb-2">
-                  <img :src="profilePhoto" alt="" class="rounded-circle">
-                  <h6>{{ profileName }}</h6>
+                  <img :src="user.image" alt="" class="rounded-circle">
+                  <h6>{{ user.name }}</h6>
                 </div>
                 <li class="nav-item h" >
                   <a :class="this.$route.path === '/explore' ? 'active':''" class="nav-link rounded bi bi-search" href="/explore">Explore</a>
                 </li>
                 <li class="nav-item a">
-                  <a :class="this.$route.path === '/mystories' ? 'active':''" class="nav-link rounded bi bi-book" href="/mystories">My Stories</a>
+                  <a :class="this.$route.path === '/myStories' ? 'active':''" class="nav-link rounded bi bi-book" href="/mystories">My Stories</a>
                 </li>
                 <li class="nav-item e">
                   <a :class="this.$route.path === '/profile' ? 'active':''" class="nav-link rounded bi bi-person-fill" href="/profile">My Profile</a>
@@ -49,12 +49,11 @@
   export default{
     data(){
       return{
+        user: this.$store.state.apiControl.user
       }
     },
     props: {
       islogin: Boolean,
-      profilePhoto: String,
-      profileName: String,
     }
   }
 </script>

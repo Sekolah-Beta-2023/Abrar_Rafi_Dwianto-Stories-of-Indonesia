@@ -7,7 +7,7 @@
                     <a class="bi bi-search" href="/explore">Explore</a>
                 </li>
                 <li class="nav-item mb-2 rounded">
-                    <a class="bi bi-book" href="/mystories">My Stories</a>
+                    <a class="bi bi-book" href="/myStories">My Stories</a>
                 </li>
                 <li class="nav-item mb-2 rounded">
                     <a class="bi bi-person-fill" href="/profile">My Profile</a>
@@ -15,8 +15,8 @@
             </ul>
         </div>
         <div class="profile">
-            <img :src="profilePhoto" alt="" class="rounded-circle">
-            <h6>{{ profileName }}</h6>
+            <img :src="user.image" alt="" class="rounded-circle">
+            <h6>{{ user.name }}</h6>
         </div>
     </div>
 </template>
@@ -24,12 +24,9 @@
     export default{
         data(){
             return{
+                user: this.$store.state.apiControl.user,
             }
         },
-        props:{
-            profilePhoto: String,
-            profileName: String,
-        }
     }
 </script>
 <style>

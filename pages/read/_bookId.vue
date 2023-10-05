@@ -1,14 +1,19 @@
 <template>
     <div class="wraper">
-        <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgnn' : ''"/>
+        <loadingTemplate v-if="loading"/>
+        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
-                    <div id="wrapcntn" class="rounded shadow mt-4">
-                        <div class="content" v-html="`<h1> ${book.title} </h1>` + book.content">
+                    <div id="wrapcntn" :class="islogin? 'rounded shadow' : 'rounded shadow mt-4'">
+                        <div class="content">
                         </div>
                     </div>
+                    <section class="action">
+                        <nuxt-link :to="`/edit/${this.$route.params.bookId}`" :class="'btn btn-primary mt-3'">edit</nuxt-link>
+                        <button :class="'btn btn-danger mt-3'" @click="del">delete</button>
+                    </section>
                 </div>
             </section>
         </main>
@@ -17,6 +22,7 @@
 </template>
 <script>
     import FooterTemplate from '~/components/FooterTemplate.vue'
+    import LoadingTemplate from '~/components/LoadingTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
     import SidebarTemplate from '~/components/SidebarTemplate.vue'
 
@@ -25,43 +31,105 @@
             NavbarTemplate,
             FooterTemplate,
             SidebarTemplate,
+            LoadingTemplate,
+
         },
         data() {
             return {
                 controllPanel: false,
-                islogin: false,
-                book: {
-                    "cover": require('@/static/img/bedawang.jpg'),
-                    "title": "Lorem Ipsum",
-                    "description": "lorem ipsum sit amet dolor constrestus",
-                    "categories": ['Horror', 'Myth'],
-                    "content": "<p placeholder=\"Paragraph\"><div>Lorem ipsum etiam netus at sollicitudin pharetra sed arcu euismod eros, hac velit sem habitant nulla congue sociosqu eget quisque urna, pulvinar proin viverra nostra proin odio donec nunc fringilla. Morbi bibendum venenatis curabitur morbi nullam vulputate nibh enim quisque per, accumsan sem commodo lectus eros porta augue felis nulla, interdum a tempor dictumst felis himenaeos nibh accumsan potenti. Pulvinar primis libero urna varius potenti tortor tempus tristique pharetra, semper vehicula est consectetur mi hac egestas quam facilisis molestie, nulla pulvinar volutpat fusce egestas ac elementum interdum.</div><div><br></div><div>Metus faucibus consequat est commodo mauris potenti commodo odio enim ut sodales semper praesent nunc malesuada interdum, id phasellus nostra quisque elementum nunc proin diam duis litora conubia venenatis morbi aenean arcu. Commodo tempor dolor curae quam ultricies ac porttitor duis praesent bibendum ante augue vivamus posuere vehicula ornare ultrices, nec vel mattis dui fusce a eleifend in donec fermentum conubia condimentum nunc non sit.</div></p>",
-                    "author": "Abrar Rafi"
-                },
-                user:{
-                    name: 'Abrar Rafi',
-                    image: require('@/static/img/bedawang.jpg'),
-                },
+                islogin: true,
+                book: {},
+                user: this.$store.state.apiControl.user,
                 cimg:'',
+                cvrLink:'',
+                delFiles:[],
+                loading: false,
+            }
+        },
+        async fetch(){
+            try {
+                await this.$axios.get(`/rest/v1/stories?id=eq.${this.$route.params.bookId}&select=*`,{
+                    'headers':{
+                        'apikey': this.user.token,
+                    }
+                }).then(res=>{
+                    this.book = res.data[0];
+                    this.preparingDel();
+                });
+            } catch (error) {
+                console.log(error);
             }
         },
         mounted() {
-            document.querySelector('.content').innerHTML = `<h1>${this.book.title}</h1>` + this.book.content;
 
-            const elm = document.querySelectorAll('[placeholder]');
-            elm.forEach(element => {
-                element.removeAttribute('placeholder');
-            });
         },
         computed:{
             
         },
         methods:{
-
+            preparingDel(){
+                // set content
+                const cntn = document.querySelector('.content');
+                cntn.innerHTML = this.book.content;
+                console.log(cntn);
+                this.cvrLink = this.book.cover;
+                this.cvrLink = this.cvrLink.split('/');
+                this.cvrLink = this.cvrLink.slice(-1)[0];
+                console.log(this.cvrLink);
+                console.log(cntn.querySelectorAll('div.cimg'));
+                
+                cntn.querySelectorAll('div.cimg').forEach((itm)=>{
+                    console.log(itm.querySelector('.cntnImg').alt);
+                    this.delFiles.push(itm.querySelector('.cntnImg').alt);
+                })
+                console.log(this.delFiles);
+            },
+            async del(){
+                this.loading = true;
+                let complete = 0;
+                // delete rows
+                try {
+                    await this.$axios.delete(`/rest/v1/stories?id=eq.${this.$route.params.bookId}`,{
+                        'headers':{
+                            'apikey': `${this.user.token}`,
+                        },
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+                // cover
+                try {
+                    await this.$axios.delete(`/storage/v1/object/storiesoi/stories/${this.cvrLink}`, {
+                        'headers':{
+                            'Authorization': `Bearer ${this.user.token}`,
+                        },
+                    });
+                } catch (error) {
+                    console.log(error);
+                }
+                // delete files cntn
+                this.delFiles.forEach(async (itm)=>{
+                    try {
+                        await this.$axios.delete(`/storage/v1/object/storiesoi/content/${itm}`, {
+                            'headers':{
+                                'Authorization': `Bearer ${this.user.token}`,
+                            },
+                        });
+                    } catch (error) {
+                        console.log(error);
+                    }finally{
+                        complete++;
+                        if (complete === this.delFiles.length){
+                            location.href = '/explore';
+                        }
+                    }
+                });
+            }
         }
     }
 </script>
 <style>
+
     body{
         background-color: rgb(226, 223, 223);
     }
