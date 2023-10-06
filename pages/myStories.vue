@@ -79,7 +79,8 @@
             SidebarTemplate,
         },
         async fetch(){
-            await this.$axios.get(`/rest/v1/stories?author=eq${this.user.name}.&select=*`,{
+            console.log(this.user.nam);
+            await this.$axios.get(`/rest/v1/stories?author=eq.${this.user.name}&select=*`,{
                 'headers': {
                     'apikey': this.user.token,
                 }

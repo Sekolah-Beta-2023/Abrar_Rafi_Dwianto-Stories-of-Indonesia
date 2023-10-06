@@ -99,7 +99,7 @@
                 }
                 // cover
                 try {
-                    await this.$axios.delete(`/storage/v1/object/storiesoi/stories/${this.cvrLink}`, {
+                    await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.cvrLink}`, {
                         'headers':{
                             'Authorization': `Bearer ${this.user.token}`,
                         },
@@ -108,22 +108,29 @@
                     console.log(error);
                 }
                 // delete files cntn
-                this.delFiles.forEach(async (itm)=>{
-                    try {
-                        await this.$axios.delete(`/storage/v1/object/storiesoi/content/${itm}`, {
-                            'headers':{
-                                'Authorization': `Bearer ${this.user.token}`,
-                            },
-                        });
-                    } catch (error) {
-                        console.log(error);
-                    }finally{
-                        complete++;
-                        if (complete === this.delFiles.length){
-                            location.href = '/explore';
+                if (this.delFiles.lenght > 0) {
+                    this.delFiles.forEach(async (itm)=>{
+                        try {
+                            await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm}`, {
+                                'headers':{
+                                    'Authorization': `Bearer ${this.user.token}`,
+                                },
+                            });
+                        } catch (error) {
+                            console.log(error);
+                        }finally{
+                            complete++;
+                            console.log(this.delFiles.length, complete);
+                            if (complete === this.delFiles.length){
+                                location.href = '/explore';
+                            }
                         }
-                    }
-                });
+                    });
+                } else {
+                    location.href = '/explore';
+                }
+                
+                
             }
         }
     }

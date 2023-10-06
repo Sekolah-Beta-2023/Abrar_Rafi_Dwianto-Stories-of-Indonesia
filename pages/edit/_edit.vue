@@ -246,11 +246,11 @@
                     console.log(element);
                     element.nextElementSibling.remove();
                     element.removeAttribute('on-click');
-                    element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/content/${element.alt}`;
+                    element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${this.user.id}/content/${element.alt}`;
                 });
                 
                 if(this.cvrLink !== this.form.cover){
-                    this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/stories/${this.form.cover}`;
+                    this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${this.user.id}/stories/${this.form.cover}`;
                 }
                 this.form.content = document.querySelector('.content').innerHTML;
                 this.form.author = this.user.name;
@@ -266,7 +266,7 @@
                     this.cvrLink = this.cvrLink.split('/');
                     this.cvrLink = this.cvrLink[-1];
                     try {
-                        await this.$axios.delete(`/storage/v1/object/storiesoi/stories/${this.cvrLink}`, {
+                        await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.cvrLink}`, {
                             'headers':{
                                 'Authorization': `Bearer ${this.user.token}`,
                             },
@@ -279,7 +279,7 @@
                     this.compareFiles.forEach(async itm=>{
                         if ((itm[1] === false || itm[0] !== itm[1].alt) && itm[0] !== ''){
                             try {
-                                await this.$axios.delete(`/storage/v1/object/storiesoi/content/${itm[0]}`, {
+                                await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm[0]}`, {
                                     'headers':{
                                         'Authorization': `Bearer ${this.user.token}`,
                                     },
@@ -328,7 +328,7 @@
                     // cover
                     if (this.form.cvrFile !== ''){
                         file.append('file', this.form.cvrFile);
-                        await this.$axios.post(`/storage/v1/object/storiesoi/stories/${this.form.cvrFile.name}`, file, {
+                        await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.form.cvrFile.name}`, file, {
                             'headers':{
                                 'Authorization': `Bearer ${this.user.token}`,
                             }
@@ -345,7 +345,7 @@
                             file = new FormData();
                             file.append(`file${i}`, itm[0]);
                             itm[1].alt = itm[0].name;
-                            await this.$axios.post(`/storage/v1/object/storiesoi/content/${itm[0].name}`, file, {
+                            await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm[0].name}`, file, {
                                 'headers':{
                                     'Authorization': `Bearer ${this.user.token}`,
                                 }
