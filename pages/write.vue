@@ -1,5 +1,6 @@
 <template>
-    <div class="wraper">
+    <div class="wraper" >
+        <loadingTemplate v-if="!islogin"/>
         <loadingTemplate v-if="loading"/>
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
@@ -76,7 +77,7 @@
         data() {
             return {
                 controllPanel: false,
-                islogin: true,
+                islogin: this.$store.state.userControl.islogin,
                 form: {
                     'cover': '',
                     'title': '',
@@ -87,14 +88,16 @@
                     'cvrFile': '',
                     'files': [],
                 },
-                user: this.$store.state.apiControl.user,
+                user: this.$store.state.userControl.user,
                 cimg: '',
                 target: '',
                 loading: false,
             }
         },
-        mounted() {
-
+        beforeMount() {
+            if(this.islogin === false){
+                this.$router.push('/logIn');
+            }
         },
         computed:{
             
@@ -218,9 +221,11 @@
                         'categories': this.form.categories,
                         'content': this.form.content,
                         'author': this.form.author,
+                        'author_Id': this.user.id,
                     },{
                         'headers':{
                             'apikey': this.user.token,
+                            "Authorization": `Bearer ${this.user.userToken}`,
                         }
                     })
                 } catch (error) {
@@ -235,7 +240,7 @@
                         file.append('file', this.form.cvrFile);
                         await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.form.cvrFile.name}`, file, {
                             'headers':{
-                                'Authorization': `Bearer ${this.user.token}`,
+                                'Authorization': `Bearer ${this.user.userToken}`,
                             }
                         });
                     }
@@ -253,20 +258,20 @@
                             itm[1].alt = itm[0].name;
                             await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm[0].name}`, file, {
                                 'headers':{
-                                    'Authorization': `Bearer ${this.user.token}`,
+                                    'Authorization': `Bearer ${this.user.userToken}`,
+                                }
+                            }).then(()=>{
+                                complete++;
+                                if (complete === this.form.files.length){
+                                    this.$router.push('/explore');
                                 }
                             });
                         }catch (error) {
                             console.log('error content',error);
-                        }finally{
-                            complete++;
-                            if (complete === this.form.files.length){
-                                location.href = '/explore';
-                            }
                         }
                     });
                 }else{
-                    location.href = '/explore';
+                    this.$router.push('/explore');
                 }
                 
             },

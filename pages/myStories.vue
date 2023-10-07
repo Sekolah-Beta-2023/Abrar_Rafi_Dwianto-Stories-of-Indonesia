@@ -1,6 +1,7 @@
 <template>
     <!-- form input add story -->
     <div id="start">
+        <LoadingTemplate v-if="!islogin"/>
         <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn1' : '' "/>
         <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(100% - (6rem + 20px + 1vh))'}">
             <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn2' : '' " v-if="islogin" />
@@ -53,6 +54,7 @@
     import NavbarTemplate from '~/components/NavbarTemplate.vue';
     import FooterTemplate from '~/components/FooterTemplate.vue';
     import SidebarTemplate from '~/components/SidebarTemplate.vue';
+    import LoadingTemplate from '~/components/LoadingTemplate.vue';
 
     export default {
         data(){
@@ -62,7 +64,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: true,
+                islogin: this.$store.state.userControl.islogin,
                 form: {
                     'cover':'',
                     'title':'',
@@ -70,27 +72,31 @@
                     'author':'',
                     'categories':[]
                 },
-                user: this.$store.state.apiControl.user,
+                user: this.$store.state.userControl.user,
             }
         },
         components: {
             NavbarTemplate,
             FooterTemplate,
             SidebarTemplate,
+            LoadingTemplate,
         },
         async fetch(){
             console.log(this.user.nam);
-            await this.$axios.get(`/rest/v1/stories?author=eq.${this.user.name}&select=*`,{
+            await this.$axios.get(`/rest/v1/stories?author_Id=eq.${this.user.id}&select=*`,{
                 'headers': {
                     'apikey': this.user.token,
+                    'Authorization': `Bearer ${this.user.userToken}`,
                 }
             }).then(ress=>{
                 this.db = ress.data;
                 this.show = this.db;
             });
         },
-        mounted(){
-
+        beforeMount(){
+            if(this.islogin === false){
+                this.$router.push('/logIn');
+            }
         },
         methods:{
             addstory(){

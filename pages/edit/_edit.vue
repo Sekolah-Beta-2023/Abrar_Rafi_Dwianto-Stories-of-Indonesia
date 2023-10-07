@@ -1,5 +1,6 @@
 <template>
-    <div class="wraper">
+    <div class="wraper" >
+        <loadingTemplate v-if="!islogin"/>
         <loadingTemplate v-if="loading"/>
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
@@ -76,9 +77,9 @@
         data() {
             return {
                 controllPanel: false,
-                islogin: true,
+                islogin: this.$store.state.userControl.islogin,
                 form: {},
-                user: this.$store.state.apiControl.user,
+                user: this.$store.state.userControl.user,
                 cimg: '',
                 target: '',
                 loading: false,
@@ -91,6 +92,7 @@
                 await this.$axios.get(`/rest/v1/stories?id=eq.${this.$route.params.edit}&select=*`,{
                     'headers':{
                         "apikey": this.user.token,
+                        "Authorization": this.user.userToken,
                     }
                 }).then(res=>{
                     this.form = {
@@ -105,8 +107,10 @@
                 console.log(error);
             }
         },
-        created(){
-            
+        beforeMount(){
+            if(this.islogin === false){
+                this.$router.push('/logIn');
+            }
         },
         mounted() {
             
@@ -264,11 +268,11 @@
                 let complete = 0;
                 if ( this.cvrLink !== this.form.cover ){
                     this.cvrLink = this.cvrLink.split('/');
-                    this.cvrLink = this.cvrLink[-1];
+                    this.cvrLink = this.cvrLink.slice(-1)[0];
                     try {
                         await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.cvrLink}`, {
                             'headers':{
-                                'Authorization': `Bearer ${this.user.token}`,
+                                'Authorization': `Bearer ${this.user.userToken}`,
                             },
                         });
                     } catch (error) {
@@ -281,7 +285,7 @@
                             try {
                                 await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm[0]}`, {
                                     'headers':{
-                                        'Authorization': `Bearer ${this.user.token}`,
+                                        'Authorization': `Bearer ${this.user.userToken}`,
                                     },
                                 });
                             } catch (error) {
@@ -316,6 +320,7 @@
                     },{
                         'headers':{
                             'apikey': this.user.token,
+                            'Authorization': `Bearer ${this.user.userToken}`,
                         }
                     })
                 } catch (error) {
@@ -330,7 +335,7 @@
                         file.append('file', this.form.cvrFile);
                         await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.form.cvrFile.name}`, file, {
                             'headers':{
-                                'Authorization': `Bearer ${this.user.token}`,
+                                'Authorization': `Bearer ${this.user.userToken}`,
                             }
                         });
                     }
@@ -347,7 +352,7 @@
                             itm[1].alt = itm[0].name;
                             await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm[0].name}`, file, {
                                 'headers':{
-                                    'Authorization': `Bearer ${this.user.token}`,
+                                    'Authorization': `Bearer ${this.user.userToken}`,
                                 }
                             });
                         }catch (error) {
@@ -355,13 +360,13 @@
                         }finally{
                             complete++;
                             if (complete === this.form.files.length && completeDel === true){
-                                location.href = '/explore';
+                                this.$router.push('/explore');
                             }
                         }
                     });
                     console.log(complete, completeDel, this.form.files.length);
                 }else{
-                    location.href = '/explore';
+                    this.$router.push('/explore');
                     console.log(complete, completeDel, this.form.files.length);
                 }
                 

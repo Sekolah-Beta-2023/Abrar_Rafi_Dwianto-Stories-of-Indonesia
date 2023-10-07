@@ -1,5 +1,6 @@
 <template>
     <div class="wraper">
+        <LoadingTemplate v-if="!islogin || loading"/>
         <loadingTemplate v-if="loading"/>
         <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
@@ -8,11 +9,17 @@
                 <div>
                     <div id="wrapcntn" :class="islogin? 'rounded shadow' : 'rounded shadow mt-4'">
                         <div class="content">
+                            <div>
+                                <img @click="handleClick" id="profilePhoto" class="rounded-circle shadow mb-4" :src="`https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${user.id}/profile/${user.image}`" alt="">
+                                <label for="imgProfile" :style="{display:'none'}"><input type="file" name="profile" id="imgProfile" @change="setPicture"></label>
+                                <H1 id="name" class="mb-4"><input type="text" v-model="form.username" ></H1>
+                                <p id="bio"><input type="text" v-model="form.bio" ></p>
+                            </div>
                         </div>
                     </div>
-                    <section class="action" v-if="book.author_Id === user.id">
-                        <nuxt-link :to="`/edit/${this.$route.params.bookId}`" :class="'btn btn-primary mt-3'">edit</nuxt-link>
-                        <button :class="'btn btn-danger mt-3'" @click="del">delete</button>
+                    <section class="action">
+                        <button :class="'btn btn-primary mt-3'" @click="save">save</button>
+                        <button :class="'btn btn-danger mt-3'" @click="cancel">cancel</button>
                     </section>
                 </div>
             </section>
@@ -21,6 +28,8 @@
     </div>
 </template>
 <script>
+    import { nanoid } from "nanoid"
+    import { mapActions } from "vuex"
     import FooterTemplate from '~/components/FooterTemplate.vue'
     import LoadingTemplate from '~/components/LoadingTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
@@ -36,30 +45,24 @@
         },
         data() {
             return {
-                controllPanel: false,
                 islogin: this.$store.state.userControl.islogin,
-                book: {},
                 user: this.$store.state.userControl.user,
-                cimg:'',
-                cvrLink:'',
-                delFiles:[],
                 loading: false,
+                form:{
+                    username: '',
+                    image: '',
+                    bio: '',
+                },
+                img: '',
             }
         },
-        async fetch(){
-            try {
-                await this.$axios.get(`/rest/v1/stories?id=eq.${this.$route.params.bookId}&select=*`,{
-                    'headers':{
-                        'apikey': this.user.token,
-                        'Authorization': `Bearer ${this.user.userToken}`,
-                    }
-                }).then(res=>{
-                    this.book = res.data[0];
-                    this.preparingDel();
-                });
-            } catch (error) {
-                console.log(error);
+        beforeMount(){
+            if(this.islogin === false){
+                this.$router.push('/logIn');
             }
+
+            this.form.username = this.user.name;
+            this.form.bio = this.user.bio;
         },
         mounted() {
 
@@ -68,80 +71,68 @@
             
         },
         methods:{
-            preparingDel(){
-                // set content
-                const cntn = document.querySelector('.content');
-                cntn.innerHTML = this.book.content;
-                console.log(cntn);
-                this.cvrLink = this.book.cover;
-                this.cvrLink = this.cvrLink.split('/');
-                this.cvrLink = this.cvrLink.slice(-1)[0];
-                console.log(this.cvrLink);
-                console.log(cntn.querySelectorAll('div.cimg'));
-                
-                cntn.querySelectorAll('div.cimg').forEach((itm)=>{
-                    console.log(itm.querySelector('.cntnImg').alt);
-                    this.delFiles.push(itm.querySelector('.cntnImg').alt);
-                })
-                console.log(this.delFiles);
+            ...mapActions('userControl', ['updateStore']),
+            handleClick(e){
+                document.querySelector('.content div label').click();
             },
-            async del(){
+            setPicture(e){
+                const name = nanoid(12);
+                this.form.image = name;
+                this.img = new File([e.target.files[0]], name, {type: e.target.files[0].type});
+                
+                const image = document.querySelector('#profilePhoto');
+                image.src = URL.createObjectURL(this.img);
+
+                console.log(this.form.image, this.img);
+
+            },
+            async save(){
                 this.loading = true;
-                let complete = 0;
-                // delete rows
+                const file = new FormData();
+                console.log(this.form);
+                file.append('file', this.img);
+                console.log(this.user);
                 try {
-                    await this.$axios.delete(`/rest/v1/stories?id=eq.${this.$route.params.bookId}`,{
+                    await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/profile/${this.user.image}`, {
                         'headers':{
-                            'apikey': `${this.user.token}`,
                             'Authorization': `Bearer ${this.user.userToken}`,
                         },
                     });
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message);
                 }
-                // cover
-                if (this.cvrLink !== ''){
-                    try {
-                        await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/stories/${this.cvrLink}`, {
-                            'headers':{
-                                'Authorization': `Bearer ${this.user.userToken}`,
-                            },
-                        });
-                    } catch (error) {
-                        console.log(error);
-                    }
-                }
-                // delete files cntn
-                if (this.delFiles.length > 0) {
-                    console.log(this.delFiles);
-                    this.delFiles.forEach(async (itm)=>{
-                        console.log(itm);
-                        try {
-                            await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm}`, {
-                                'headers':{
-                                    'Authorization': `Bearer ${this.user.userToken}`,
-                                },
-                            }).then(()=>{
-                                complete++;
-                                console.log(this.delFiles.length, complete);
-                                if (complete === this.delFiles.length){
-                                    this.$router.push('/explore');
-                                }
-                            });
-                        } catch (error) {
-                            console.log(error);
+
+                try {
+                    await this.$axios.patch(`/rest/v1/users?id=eq.${this.user.id}`,this.form,{
+                        'headers':{
+                            'apikey': this.user.token,
+                            "Authorization": `Bearer ${this.user.userToken}`,
                         }
                     });
-                } else {
-                    this.$router.push('/explore');
+
+                    await this.$axios.post(`/storage/v1/object/storiesoi/${this.user.id}/profile/${this.form.image}`, file, {
+                        'headers':{
+                            'Authorization': `Bearer ${this.user.userToken}`,
+                        }
+                    }).then(async res=>{
+                        const identity = {
+                            id: this.user.id,
+                            userToken: this.user.userToken,
+                        }
+                        await this.updateStore(identity);
+                        this.cancel();
+                    });
+                } catch (error) {
+                    console.log(error);
                 }
-                
-                
+            },
+            cancel(){
+                this.$router.push('/profile');
             }
         }
     }
 </script>
-<style>
+<style scooped>
 
     body{
         background-color: rgb(226, 223, 223);
@@ -198,8 +189,30 @@
         background-color: whitesmoke;
         padding: 5%;
     }
+    #profilePhoto{
+        margin-right: 0%;
+        width: 20vw;
+        height: 20vw;
+        object-fit: cover;
+    }
     .content{
+        padding: 2%;
+        width: 100%;
+        height: auto;
         text-align: center;
+    }
+    .content div{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    .content input{
+        width: 100%;
+        text-align: center;
+        background-color: whitesmoke;
+        outline: none;
+        border: none;
     }
 
     @media only screen and (max-width: 950px){

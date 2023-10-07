@@ -3,19 +3,19 @@
         <div>
             <h1>stories of indonesia</h1>
             <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item mb-2 rounded active">
-                    <a class="bi bi-search" href="/explore">Explore</a>
+                <li :class="this.$route.path === '/explore' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
+                    <nuxt-link class="bi bi-search" to="/explore">Explore</nuxt-link>
                 </li>
-                <li class="nav-item mb-2 rounded">
-                    <a class="bi bi-book" href="/myStories">My Stories</a>
+                <li :class="this.$route.path === '/myStories' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
+                    <nuxt-link class="bi bi-book" to="/myStories">My Stories</nuxt-link>
                 </li>
-                <li class="nav-item mb-2 rounded">
-                    <a class="bi bi-person-fill" href="/profile">My Profile</a>
+                <li :class="this.$route.path === '/myProfile' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
+                    <nuxt-link class="bi bi-person-fill" to="/profile">My Profile</nuxt-link>
                 </li>
             </ul>
         </div>
         <div class="profile">
-            <img :src="user.image" alt="" class="rounded-circle">
+            <img :src="`https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${user.id}/profile/${user.image}`" alt="" class="rounded-circle">
             <h6>{{ user.name }}</h6>
         </div>
     </div>
@@ -24,7 +24,7 @@
     export default{
         data(){
             return{
-                user: this.$store.state.apiControl.user,
+                user: this.$store.state.userControl.user,
             }
         },
     }

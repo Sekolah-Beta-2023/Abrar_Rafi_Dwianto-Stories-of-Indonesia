@@ -11,28 +11,31 @@
             <div class="offcanvas-body">
               <ul v-if="!islogin" class="navbar-nav justify-content-end flex-grow-1 pe-2">
                 <li class="nav-item h" >
-                  <a :class="this.$route.path === '/' ? 'nav-link active':'nav-link'" href=".">Home</a>
+                  <nuxt-link :class="this.$route.path === '/' ? 'nav-link active':'nav-link'" to="/">Home</nuxt-link>
                 </li>
                 <li class="nav-item a">
-                  <a :class="this.$route.path === '/about' ? 'nav-link active':'nav-link'" href="/about">About</a>
+                  <nuxt-link :class="this.$route.path === '/about' ? 'nav-link active':'nav-link'" to="/about">About</nuxt-link>
                 </li>
                 <li class="nav-item e">
-                  <a :class="this.$route.path === '/explore' ? 'nav-link active':'nav-link'" href="/explore">Explore</a>
+                  <nuxt-link :class="this.$route.path === '/explore' ? 'nav-link active':'nav-link'" to="/explore">Explore</nuxt-link>
+                </li>
+                <li class="nav-item e">
+                  <nuxt-link :class="this.$route.path === '/logIn' ? 'nav-link active':'nav-link'" to="/logIn">Log In</nuxt-link>
                 </li>
               </ul>
               <ul v-if="islogin" class="navbar-nav justify-content-end flex-grow-1 pe-2 nb">
                 <div class="profile mb-2">
-                  <img :src="user.image" alt="" class="rounded-circle">
+                  <img :src="`https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${user.id}/profile/${user.image}`" alt="" class="rounded-circle">
                   <h6>{{ user.name }}</h6>
                 </div>
                 <li class="nav-item h" >
-                  <a :class="this.$route.path === '/explore' ? 'active':''" class="nav-link rounded bi bi-search" href="/explore">Explore</a>
+                  <nuxt-link :class="this.$route.path === '/explore' ? 'active':''" class="nav-link rounded bi bi-search" to="/explore">Explore</nuxt-link>
                 </li>
                 <li class="nav-item a">
-                  <a :class="this.$route.path === '/myStories' ? 'active':''" class="nav-link rounded bi bi-book" href="/mystories">My Stories</a>
+                  <nuxt-link :class="this.$route.path === '/myStories' ? 'active':''" class="nav-link rounded bi bi-book" to="/mystories">My Stories</nuxt-link>
                 </li>
                 <li class="nav-item e">
-                  <a :class="this.$route.path === '/profile' ? 'active':''" class="nav-link rounded bi bi-person-fill" href="/profile">My Profile</a>
+                  <nuxt-link :class="this.$route.path === '/profile' ? 'active':''" class="nav-link rounded bi bi-person-fill" to="/profile">My Profile</nuxt-link>
                 </li>
               </ul>
             </div>
@@ -49,7 +52,7 @@
   export default{
     data(){
       return{
-        user: this.$store.state.apiControl.user
+        user: this.$store.state.userControl.user
       }
     },
     props: {

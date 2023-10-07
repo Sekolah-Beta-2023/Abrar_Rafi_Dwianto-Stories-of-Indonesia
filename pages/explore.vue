@@ -57,7 +57,7 @@
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
                 addcomp: false,
-                islogin: true,
+                islogin: this.$store.state.userControl.islogin,
                 form: {
                     'cover':'',
                     'title':'',
@@ -65,7 +65,7 @@
                     'author':'',
                     'categories':[]
                 },
-                user: this.$store.state.apiControl.user,
+                user: this.$store.state.userControl.user,
             }
         },
         components: {
@@ -77,10 +77,12 @@
             await this.$axios.get('/rest/v1/stories?select=*',{
                 'headers': {
                     'apikey': this.user.token,
+                    'Authorization': `Bearer ${this.user.userToken}`,
                 }
             }).then(ress=>{
                 this.db = ress.data;
                 this.show = this.db;
+                console.log(this.user);
             });
         },
         mounted(){
