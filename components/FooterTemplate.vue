@@ -12,7 +12,7 @@
 </template>
 <script>
 </script>
-<style>
+<style scooped>
     div footer{
         background-color: whitesmoke;
         border-top: 2px solid rgba(245, 245, 245, 0.116);

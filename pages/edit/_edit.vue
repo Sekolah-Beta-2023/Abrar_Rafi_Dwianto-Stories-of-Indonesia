@@ -1,7 +1,6 @@
 <template>
     <div class="wraper" >
-        <loadingTemplate v-if="!islogin"/>
-        <loadingTemplate v-if="loading"/>
+        <loadingTemplate v-if="!islogin || loading"/>
         <div v-if="controllPanel" id="cntrlWrap" @click="cpanel">
             <div class="controllPanel rounded shadow">
                 <h1 class="heading1 mb-3" @click="adding('h1', 'Heading 1')">Heading 1</h1>
@@ -11,9 +10,9 @@
                 <p class="paragraph mb-3" @click="adding('img', 'image')"> image </p>
             </div>
         </div>
-        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
+        <NavbarTemplate :user="user" :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :user="user" :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
                     <div class="appearance container-fluid rounded shadow">
@@ -107,9 +106,15 @@
                 console.log(error);
             }
         },
-        beforeMount(){
-            if(this.islogin === false){
-                this.$router.push('/logIn');
+        async beforeMount(){
+            if (this.islogin === false){
+                if( await this.$store.dispatch('userControl/checkIsLogin') ){
+                    this.islogin = true;
+                    this.user = this.$store.state.userControl.user;
+                    // this.$router.push('/profile')
+                }else{
+                    this.$router.push('/logIn');
+                }
             }
         },
         mounted() {

@@ -1,9 +1,9 @@
 <template>
     <!-- form input add story -->
     <div id="start">
-        <NavbarTemplate :islogin="islogin" :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn1' : '' "/>
+        <NavbarTemplate :user="user" :islogin="islogin" :class="islogin ? 'lgn1' : '' "/>
         <div class="mainwrap" :style="{height: islogin? 'calc(97% - (2rem + 5px))' : 'calc(100% - (6rem + 20px + 1vh))'}">
-            <SidebarTemplate :profilePhoto="user.image" :profileName="user.name" :class="islogin ? 'lgn2' : '' " v-if="islogin" />
+            <SidebarTemplate :user="user" :class="islogin ? 'lgn2' : '' " v-if="islogin" />
             <div class="main">
                 <div class="box container-fluid">
                     <div class="dropdown filter">
@@ -56,15 +56,7 @@
                 show: this.db,
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
-                addcomp: false,
                 islogin: this.$store.state.userControl.islogin,
-                form: {
-                    'cover':'',
-                    'title':'',
-                    'content':'',
-                    'author':'',
-                    'categories':[]
-                },
                 user: this.$store.state.userControl.user,
             }
         },
@@ -84,6 +76,14 @@
                 this.show = this.db;
                 console.log(this.user);
             });
+        },
+        async beforeMount(){
+            if (this.islogin === false){
+                if( await this.$store.dispatch('userControl/checkIsLogin') ){
+                    this.islogin = true;
+                    this.user = this.$store.state.userControl.user;
+                }
+            }
         },
         mounted(){
 

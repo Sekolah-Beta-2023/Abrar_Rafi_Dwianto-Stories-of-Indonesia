@@ -28,6 +28,8 @@ export const mutations = {
             userToken: user.userToken,
         }
 
+        state.islogin = true;
+
         console.log(state.user);
     }
 }
@@ -44,6 +46,9 @@ export const actions = {
                 }
             }).then(async(res)=>{
                 await context.dispatch('createUserData', res.data);
+                // avoid cookies save by supabase
+                document.cookie=`sb-access-token=; expires=${new Date(0).toUTCString()}`;
+                document.cookie=`sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
             });
         } catch (error) {
             console.log(error);
@@ -77,6 +82,12 @@ export const actions = {
                 context.commit('SET_USER_STORE', user);
                 console.log(this.state.userControl.user);
                 context.commit('LOG_IN');
+                // set cookies
+                document.cookie = `sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
+                const date = new Date();
+                date.setTime(date.getTime() + 60*60*24*1000);
+                document.cookie = `id=${this.state.userControl.user.id};expires=${date.toUTCString()};path=/`;
+                document.cookie = `acc=${this.state.userControl.user.userToken};expires=${date.toUTCString()};path=/`;
             });
         } catch (error) {
             console.log(error);
@@ -84,10 +95,41 @@ export const actions = {
         }
     },
 
+    async checkIsLogin(context){
+        const cookie = document.cookie.split(';');
+        const cookieData = {...this.state.userControl.user}
+        
+        cookie.forEach(itm=>{
+            const itmData = itm.trim().split('=');
+            console.log(itm);
+            if (itmData[0] === 'id' && (itmData[1] !== '' || itmData[1] !== null)){
+                cookieData.id = itmData[1];
+            }
+            else if (itmData[0] === 'acc' && (itmData[1] !== '' || itmData[1] !== null)){
+                console.log(itmData[1]);
+                cookieData.userToken = itmData[1];
+            }else{
+                return false;
+            }
+        });
+
+        const userData = await context.dispatch('getUserFromServer', cookieData);
+        if (userData !== undefined) {
+            console.log(userData, cookieData);
+            cookieData.name = userData.username;
+            cookieData.image = userData.image;
+            cookieData.bio = userData.bio;
+        }else{this.$router.push('/logIn');}
+
+        context.commit('SET_USER_STORE', cookieData);
+        return true;
+    },
+
+    
+    // ---------------------------system---------------------------
     async updateStore(context, data){
         const storeData = {...this.state.userControl.user}
         const dtserver = await context.dispatch('getUserFromServer', data);
-        
         storeData.name = dtserver.username;
         storeData.image = dtserver.image;
         storeData.bio = dtserver.bio;
@@ -95,9 +137,7 @@ export const actions = {
         console.log(storeData);
         context.commit('SET_USER_STORE', storeData);
     },
-
-// ---------------------------system---------------------------
-
+    
     async createUserData(context, data){
         try {
             console.log(data);
@@ -131,7 +171,8 @@ export const actions = {
             })
             return resdata;
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
+            this.$router.push('/login');
         }
     }
 }

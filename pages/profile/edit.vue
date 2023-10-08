@@ -1,10 +1,9 @@
 <template>
     <div class="wraper">
         <LoadingTemplate v-if="!islogin || loading"/>
-        <loadingTemplate v-if="loading"/>
-        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
+        <NavbarTemplate :user="user" :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :user="user" :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
                     <div id="wrapcntn" :class="islogin? 'rounded shadow' : 'rounded shadow mt-4'">
@@ -56,11 +55,18 @@
                 img: '',
             }
         },
-        beforeMount(){
-            if(this.islogin === false){
-                this.$router.push('/logIn');
+        async beforeMount(){
+            if (this.islogin === false){
+                if( await this.$store.dispatch('userControl/checkIsLogin') ){
+                    this.islogin = true;
+                    this.user = this.$store.state.userControl.user;
+                    // this.$router.push('/profile')
+                }else{
+                    this.$router.push('/logIn');
+                }
             }
 
+            this.form.image = this.user.image;
             this.form.username = this.user.name;
             this.form.bio = this.user.bio;
         },
@@ -68,7 +74,10 @@
 
         },
         computed:{
-            
+            checkLogin(){
+                console.log(document.cookie);
+                return 0;
+            }
         },
         methods:{
             ...mapActions('userControl', ['updateStore']),
@@ -89,17 +98,19 @@
             async save(){
                 this.loading = true;
                 const file = new FormData();
-                console.log(this.form);
-                file.append('file', this.img);
-                console.log(this.user);
-                try {
-                    await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/profile/${this.user.image}`, {
-                        'headers':{
-                            'Authorization': `Bearer ${this.user.userToken}`,
-                        },
-                    });
-                } catch (error) {
-                    console.log(error.message);
+                if(this.img !== ''){
+                    console.log(this.form);
+                    file.append('file', this.img);
+                    console.log(this.user);
+                    try {
+                        await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/profile/${this.user.image}`, {
+                            'headers':{
+                                'Authorization': `Bearer ${this.user.userToken}`,
+                            },
+                        });
+                    } catch (error) {
+                        console.log(error.message);
+                    }
                 }
 
                 try {
@@ -114,19 +125,21 @@
                         'headers':{
                             'Authorization': `Bearer ${this.user.userToken}`,
                         }
-                    }).then(async res=>{
-                        const identity = {
-                            id: this.user.id,
-                            userToken: this.user.userToken,
-                        }
-                        await this.updateStore(identity);
-                        this.cancel();
                     });
                 } catch (error) {
                     console.log(error);
                 }
+
+                const identity = {
+                    id: this.user.id,
+                    userToken: this.user.userToken,
+                }
+
+                await this.updateStore(identity);
+                this.cancel();
             },
             cancel(){
+                this.user = this.$store.state.userControl.user;
                 this.$router.push('/profile');
             }
         }

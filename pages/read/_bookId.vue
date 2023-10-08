@@ -1,9 +1,9 @@
 <template>
     <div class="wraper">
         <loadingTemplate v-if="loading"/>
-        <NavbarTemplate :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
+        <NavbarTemplate :user="user" :islogin="islogin" :class="islogin? 'lgnn' : ''"/>
         <main :style="{height: islogin? 'calc(100% - (3rem + 12px + 4vh))' : 'calc(100% - (6rem + 20px + 5vh))', padding: islogin? '':'0% 15%'}">
-            <SidebarTemplate :class="islogin? 'lgns' : ''" v-if="islogin" />
+            <SidebarTemplate :user="user" :class="islogin? 'lgns' : ''" v-if="islogin" />
             <section class="main container-fluid">
                 <div>
                     <div id="wrapcntn" :class="islogin? 'rounded shadow' : 'rounded shadow mt-4'">
@@ -59,6 +59,17 @@
                 });
             } catch (error) {
                 console.log(error);
+            }
+        },
+        async beforeMount(){
+            if (this.islogin === false){
+                if( await this.$store.dispatch('userControl/checkIsLogin') ){
+                    this.islogin = true;
+                    this.user = this.$store.state.userControl.user;
+                    // this.$router.push('/profile')
+                }else{
+                    this.$router.push('/logIn');
+                }
             }
         },
         mounted() {

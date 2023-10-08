@@ -20,13 +20,16 @@
         </div>
     </div>
 </template>
-<script>
+<script scooped>
     export default{
         data(){
             return{
-                user: this.$store.state.userControl.user,
+                
             }
         },
+        props:{
+            user: Object,
+        }
     }
 </script>
 <style>

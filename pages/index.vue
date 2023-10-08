@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavbarTemplate />
+    <NavbarTemplate :user="user"  :islogin="islogin"/>
     <div class="welcome" data-bs-theme="light">
       <h1>Welcome to Stories of Indonesia</h1>
       <p>know more about Indonesian legends, folklore, scary stories, interesting rumors, and timeless myths</p>
@@ -18,6 +18,20 @@
     components: {
       NavbarTemplate,
       FooterTemplate,
+    },
+    data(){
+      return{
+        islogin: this.$store.state.userControl.islogin,
+        user: this.$store.state.userControl.user,
+      }
+    },
+    async beforeMount(){
+      if (this.islogin === false){
+        if( await this.$store.dispatch('userControl/checkIsLogin') ){
+            this.islogin = true;
+            this.user = this.$store.state.userControl.user;
+          }
+        }
     },
   }
 </script>

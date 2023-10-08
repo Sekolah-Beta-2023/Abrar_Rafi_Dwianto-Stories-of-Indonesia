@@ -9,7 +9,7 @@
     }
 </script>
 
-<style>
+<style scooped>
     .loadingwrp{
         background-color: #ffffffad;
         width: 100vw;
