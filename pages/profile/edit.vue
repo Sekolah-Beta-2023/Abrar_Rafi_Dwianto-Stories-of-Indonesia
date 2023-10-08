@@ -74,10 +74,7 @@
 
         },
         computed:{
-            checkLogin(){
-                console.log(document.cookie);
-                return 0;
-            }
+            
         },
         methods:{
             ...mapActions('userControl', ['updateStore']),
@@ -145,7 +142,7 @@
         }
     }
 </script>
-<style scooped>
+<style scoped>
 
     body{
         background-color: rgb(226, 223, 223);

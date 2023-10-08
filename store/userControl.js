@@ -119,7 +119,10 @@ export const actions = {
             cookieData.name = userData.username;
             cookieData.image = userData.image;
             cookieData.bio = userData.bio;
-        }else{this.$router.push('/logIn');}
+        }else{
+            // this.$router.push('/logIn');
+            return false;
+        }
 
         context.commit('SET_USER_STORE', cookieData);
         return true;
@@ -172,7 +175,9 @@ export const actions = {
             return resdata;
         } catch (error) {
             console.log(error.message);
-            this.$router.push('/login');
+            document.cookie=`sb-access-token=; expires=${new Date(0).toUTCString()}`;
+            document.cookie=`sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
+            // this.$router.push('/login');
         }
     }
 }

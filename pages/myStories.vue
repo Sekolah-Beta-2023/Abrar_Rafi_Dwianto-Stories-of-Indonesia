@@ -168,7 +168,7 @@
         },
     }
 </script>
-<style>
+<style scoped>
     body{
         background-color: rgb(226, 223, 223);
     }

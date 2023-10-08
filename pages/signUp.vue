@@ -42,7 +42,7 @@ export default {
 }
 </script>
 
-<style scooped>
+<style scoped>
     body{
         background-color: rgb(226, 223, 223);
     }

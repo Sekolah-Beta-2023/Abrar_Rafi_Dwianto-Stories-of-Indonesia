@@ -48,7 +48,7 @@
     </div>
 </template>
 
-<script scooped>
+<script scoped>
   export default{
     data(){
       return{

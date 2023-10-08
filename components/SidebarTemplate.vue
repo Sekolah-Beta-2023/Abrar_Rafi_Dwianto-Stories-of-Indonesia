@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper rounded sd">
+    <div class="wrapper rounded sd shadow">
         <div>
             <h1>stories of indonesia</h1>
             <ul class="nav nav-pills flex-column mb-auto">
@@ -20,7 +20,7 @@
         </div>
     </div>
 </template>
-<script scooped>
+<script scoped>
     export default{
         data(){
             return{

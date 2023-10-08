@@ -14,6 +14,7 @@
                         <nuxt-link :to="`/edit/${this.$route.params.bookId}`" :class="'btn btn-primary mt-3'">edit</nuxt-link>
                         <button :class="'btn btn-danger mt-3'" @click="del">delete</button>
                     </section>
+                    <ComentTemplate class="mt-5" :islogin="islogin" :user="user" :stories="`${this.$route.params.bookId}`" />
                 </div>
             </section>
         </main>
@@ -21,6 +22,7 @@
     </div>
 </template>
 <script>
+    import ComentTemplate from '~/components/ComentTemplate.vue'
     import FooterTemplate from '~/components/FooterTemplate.vue'
     import LoadingTemplate from '~/components/LoadingTemplate.vue'
     import NavbarTemplate from '~/components/NavbarTemplate.vue'
@@ -32,7 +34,7 @@
             FooterTemplate,
             SidebarTemplate,
             LoadingTemplate,
-
+            ComentTemplate,
         },
         data() {
             return {
@@ -67,8 +69,6 @@
                     this.islogin = true;
                     this.user = this.$store.state.userControl.user;
                     // this.$router.push('/profile')
-                }else{
-                    this.$router.push('/logIn');
                 }
             }
         },
@@ -152,7 +152,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
 
     body{
         background-color: rgb(226, 223, 223);
