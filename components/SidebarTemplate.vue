@@ -20,7 +20,7 @@
         </div>
     </div>
 </template>
-<script scoped>
+<script>
     export default{
         data(){
             return{
@@ -32,7 +32,7 @@
         }
     }
 </script>
-<style>
+<style scoped>
     @font-face {
         font-family: 'boutiques of merauke';
         src: url("@/static/font/boutiques-of-merauke-font/BoutiquesOfMerauke.ttf");

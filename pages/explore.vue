@@ -74,7 +74,6 @@
             }).then(ress=>{
                 this.db = ress.data;
                 this.show = this.db;
-                console.log(this.user);
             });
         },
         async beforeMount(){

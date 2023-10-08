@@ -29,9 +29,9 @@
                 <h4>Recent comments</h4>
                 <div class="rcncomnt rounded shadow">
                     <div class="row justify-content-center mb-2" v-for="(comment, i) in comments" :key="i">
-                        <div class="row justify-content-start">
-                            <img :src="comment.profilePhoto" class="rounded-circle" alt="">
-                            <div class="col">
+                        <div class="row justify-content-start mb-2">
+                            <img :src="comment.profilePhoto" class="rounded-circle col-1" alt="">
+                            <div class="col-9">
                                 <h6> {{ comment.user }} </h6>
                                 <p> {{ comment.comment }} </p>
                             </div>
@@ -87,7 +87,6 @@ export default {
     methods:{
         async handleSubmit(){
             try {
-                console.log(this.user);
                 this.form.user = this.user.name;
                 this.form.userId = this.user.id;
                 this.form.stories = this.stories;
@@ -99,7 +98,7 @@ export default {
                     }
                 });
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
         },
         async handleServerEdit(){
@@ -117,25 +116,22 @@ export default {
                     },
                 });
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
             this.commentEdit = '';
             this.commentEditId = '';
             this.isedit = false;
         },
         async handleDelete(data){
-            console.log(data);
             try {
                 await this.$axios.delete(`/rest/v1/comments?id=eq.${data.id}`,{
                     'headers':{
                         'apikey': `${this.user.token}`,
                         'Authorization': `Bearer ${this.user.userToken}`,
                     },
-                }).then(()=>{
-                    console.log('done');
                 });
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
         },
         handleEdit(data){
@@ -156,7 +152,6 @@ export default {
     .col{
         padding: 0%;
         margin: 0%;
-        width: 100%;
     }
     .send{
         width: auto;
@@ -199,6 +194,8 @@ export default {
     }
     img{
         padding: 0%;
+        width: 3rem;
+        height: 3rem;
     }
     .popupEdit{
         position: absolute;

@@ -27,10 +27,7 @@ export const mutations = {
             token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Ind5dGluanNnZXJtY25qcGN1cG5zIiwicm9sZSI6ImFub24iLCJpYXQiOjE2OTU1MTY2NjAsImV4cCI6MjAxMTA5MjY2MH0.rzWwsADWDWlMoG8FAqRGi_axGHX9PNhENhXBMgbZuto',
             userToken: user.userToken,
         }
-
         state.islogin = true;
-
-        console.log(state.user);
     }
 }
 
@@ -51,12 +48,11 @@ export const actions = {
                 document.cookie=`sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
             });
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
     },
 
     async logIn(context,data){
-        console.log('run');
         try {
             await this.$axios.post('/auth/v1/token?grant_type=password', {
                 email: data.email,
@@ -78,9 +74,7 @@ export const actions = {
                 user.image = userData.image;
                 user.bio = userData.bio;
                 
-                console.log(user);
                 context.commit('SET_USER_STORE', user);
-                console.log(this.state.userControl.user);
                 context.commit('LOG_IN');
                 // set cookies
                 document.cookie = `sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
@@ -90,7 +84,7 @@ export const actions = {
                 document.cookie = `acc=${this.state.userControl.user.userToken};expires=${date.toUTCString()};path=/`;
             });
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
             return 'Invalid email or password';
         }
     },
@@ -101,7 +95,6 @@ export const actions = {
         
         cookie.forEach(itm=>{
             const itmData = itm.trim().split('=');
-            console.log(itm);
             if (itmData[0] === 'id' && (itmData[1] !== '' || itmData[1] !== null)){
                 cookieData.id = itmData[1];
             }
@@ -115,12 +108,10 @@ export const actions = {
 
         const userData = await context.dispatch('getUserFromServer', cookieData);
         if (userData !== undefined) {
-            console.log(userData, cookieData);
             cookieData.name = userData.username;
             cookieData.image = userData.image;
             cookieData.bio = userData.bio;
         }else{
-            // this.$router.push('/logIn');
             return false;
         }
 
@@ -137,13 +128,11 @@ export const actions = {
         storeData.image = dtserver.image;
         storeData.bio = dtserver.bio;
         
-        console.log(storeData);
         context.commit('SET_USER_STORE', storeData);
     },
     
     async createUserData(context, data){
         try {
-            console.log(data);
             await this.$axios.post('/rest/v1/users', {
                 id: data.user.id,
                 username: 'user',
@@ -156,14 +145,13 @@ export const actions = {
                 this.$router.push('/logIn');
             })
         } catch (error) {
-            console.log(error);
+            console.log(error.message);
         }
     },
 
     async getUserFromServer(context,identity={id: this.state.userControl.user.id, userToken: this.state.userControl.user.userToken}){
         try {
             let resdata;
-            console.log(identity);
             await this.$axios.get(`/rest/v1/users?id=eq.${identity.id}&select=*`,{
                 'headers': {
                     'apikey': this.state.userControl.user.token,
@@ -177,7 +165,6 @@ export const actions = {
             console.log(error.message);
             document.cookie=`sb-access-token=; expires=${new Date(0).toUTCString()}`;
             document.cookie=`sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
-            // this.$router.push('/login');
         }
     }
 }

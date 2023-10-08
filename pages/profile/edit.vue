@@ -74,7 +74,7 @@
 
         },
         computed:{
-            
+
         },
         methods:{
             ...mapActions('userControl', ['updateStore']),
@@ -89,16 +89,12 @@
                 const image = document.querySelector('#profilePhoto');
                 image.src = URL.createObjectURL(this.img);
 
-                console.log(this.form.image, this.img);
-
             },
             async save(){
                 this.loading = true;
                 const file = new FormData();
                 if(this.img !== ''){
-                    console.log(this.form);
                     file.append('file', this.img);
-                    console.log(this.user);
                     try {
                         await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/profile/${this.user.image}`, {
                             'headers':{
@@ -124,7 +120,7 @@
                         }
                     });
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message);
                 }
 
                 const identity = {

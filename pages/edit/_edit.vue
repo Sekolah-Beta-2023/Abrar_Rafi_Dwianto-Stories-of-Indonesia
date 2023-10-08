@@ -103,7 +103,7 @@
                     this.preparingForEdit();
                 });
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
         },
         async beforeMount(){
@@ -111,7 +111,6 @@
                 if( await this.$store.dispatch('userControl/checkIsLogin') ){
                     this.islogin = true;
                     this.user = this.$store.state.userControl.user;
-                    // this.$router.push('/profile')
                 }else{
                     this.$router.push('/logIn');
                 }
@@ -126,7 +125,6 @@
         methods:{
             preparingForEdit(){
                 // set categories checkbox
-                console.log(this.form);
                 document.querySelectorAll('.dropdown .dropdown-menu input').forEach((itm)=>{
                     if (this.form.categories.includes(itm.name)){
                         itm.checked = true;
@@ -252,7 +250,6 @@
                 
                 value = content.querySelectorAll('.cimg .cntnImg');
                 value.forEach(element => {
-                    console.log(element);
                     element.nextElementSibling.remove();
                     element.removeAttribute('on-click');
                     element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${this.user.id}/content/${element.alt}`;
@@ -263,7 +260,6 @@
                 }
                 this.form.content = document.querySelector('.content').innerHTML;
                 this.form.author = this.user.name;
-                console.log(this.form);
                 this.storeData();
                 
             },
@@ -281,7 +277,7 @@
                             },
                         });
                     } catch (error) {
-                        console.log(error);
+                        console.log(error.message);
                     }
                 }
                 if (this.compareFiles.length > 0){
@@ -294,13 +290,12 @@
                                     },
                                 });
                             } catch (error) {
-                                console.log(error);
+                                console.log(error.message);
                             }finally{
                                 completeDel++;
                                 if (completeDel === this.compareFiles.length){
                                     completeDel = true;
                                 }
-                                console.log(complete, completeDel);
                             }
                         }
                         else{
@@ -308,7 +303,6 @@
                             if (completeDel === this.compareFiles.length) {
                                 completeDel = true;
                             }
-                            console.log(complete, completeDel);
                         }
                     })
                 }else {completeDel = true;}
@@ -329,7 +323,7 @@
                         }
                     })
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message);
                 }
 
                 // store file
@@ -346,7 +340,7 @@
                     }
                 }
                 catch(err){
-                    console.log(err);
+                    console.log(err.message);
                 }
                 // content 
                 if (this.form.files.length > 0){
@@ -361,7 +355,7 @@
                                 }
                             });
                         }catch (error) {
-                            console.log(error);
+                            console.log(error.message);
                         }finally{
                             complete++;
                             if (complete === this.form.files.length && completeDel === true){
@@ -369,17 +363,14 @@
                             }
                         }
                     });
-                    console.log(complete, completeDel, this.form.files.length);
                 }else{
                     this.$router.push('/explore');
-                    console.log(complete, completeDel, this.form.files.length);
                 }
-                
             },
         }
     }
 </script>
-<style scoped>
+<style>
     body{
         background-color: rgb(226, 223, 223);
     }

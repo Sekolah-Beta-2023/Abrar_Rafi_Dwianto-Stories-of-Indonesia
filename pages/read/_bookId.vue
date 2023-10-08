@@ -60,7 +60,7 @@
                     this.preparingDel();
                 });
             } catch (error) {
-                console.log(error);
+                console.log(error.message);
             }
         },
         async beforeMount(){
@@ -68,7 +68,6 @@
                 if( await this.$store.dispatch('userControl/checkIsLogin') ){
                     this.islogin = true;
                     this.user = this.$store.state.userControl.user;
-                    // this.$router.push('/profile')
                 }
             }
         },
@@ -83,18 +82,13 @@
                 // set content
                 const cntn = document.querySelector('.content');
                 cntn.innerHTML = this.book.content;
-                console.log(cntn);
                 this.cvrLink = this.book.cover;
                 this.cvrLink = this.cvrLink.split('/');
                 this.cvrLink = this.cvrLink.slice(-1)[0];
-                console.log(this.cvrLink);
-                console.log(cntn.querySelectorAll('div.cimg'));
                 
                 cntn.querySelectorAll('div.cimg').forEach((itm)=>{
-                    console.log(itm.querySelector('.cntnImg').alt);
                     this.delFiles.push(itm.querySelector('.cntnImg').alt);
-                })
-                console.log(this.delFiles);
+                });
             },
             async del(){
                 this.loading = true;
@@ -108,7 +102,7 @@
                         },
                     });
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message);
                 }
                 // cover
                 if (this.cvrLink !== ''){
@@ -119,14 +113,12 @@
                             },
                         });
                     } catch (error) {
-                        console.log(error);
+                        console.log(error.message);
                     }
                 }
                 // delete files cntn
                 if (this.delFiles.length > 0) {
-                    console.log(this.delFiles);
                     this.delFiles.forEach(async (itm)=>{
-                        console.log(itm);
                         try {
                             await this.$axios.delete(`/storage/v1/object/storiesoi/${this.user.id}/content/${itm}`, {
                                 'headers':{
@@ -134,13 +126,12 @@
                                 },
                             }).then(()=>{
                                 complete++;
-                                console.log(this.delFiles.length, complete);
                                 if (complete === this.delFiles.length){
                                     this.$router.push('/explore');
                                 }
                             });
                         } catch (error) {
-                            console.log(error);
+                            console.log(error.message);
                         }
                     });
                 } else {

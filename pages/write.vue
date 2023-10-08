@@ -98,7 +98,6 @@
                 if( await this.$store.dispatch('userControl/checkIsLogin') ){
                     this.islogin = true;
                     this.user = this.$store.state.userControl.user;
-                    // this.$router.push('/profile')
                 }else{
                     this.$router.push('/logIn');
                 }
@@ -203,7 +202,6 @@
                 
                 value = content.querySelectorAll('.cimg .cntnImg');
                 value.forEach(element => {
-                    console.log(element);
                     element.nextElementSibling.remove();
                     element.removeAttribute('on-click');
                     element.src = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${this.user.id}/content/${element.alt}`;
@@ -212,7 +210,6 @@
                 this.form.cover = `https://wytinjsgermcnjpcupns.supabase.co/storage/v1/object/public/storiesoi/${this.user.id}/stories/${this.form.cover}`;
                 this.form.content = document.querySelector('.content').innerHTML;
                 this.form.author = this.user.name;
-                console.log(this.form);
                 this.storeData();
                 
             },
@@ -234,7 +231,7 @@
                         }
                     })
                 } catch (error) {
-                    console.log(error);
+                    console.log(error.message);
                 }
 
                 // store file
@@ -251,7 +248,7 @@
                     }
                 }
                 catch(err){
-                    console.log('error cover', err);
+                    console.log(err.message);
                 }
                 // content 
                 let complete=0;
@@ -272,7 +269,7 @@
                                 }
                             });
                         }catch (error) {
-                            console.log('error content',error);
+                            console.log(error.message);
                         }
                     });
                 }else{
@@ -283,7 +280,7 @@
         }
     }
 </script>
-<style scoped>
+<style>
     body{
         background-color: rgb(226, 223, 223);
     }
@@ -324,6 +321,8 @@
     }
     [contenteditable]{
         outline: none;
+        width: 100%;
+        text-align: left !important;;
     }
     section.main{
         width: 100%;

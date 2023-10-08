@@ -82,7 +82,6 @@
             LoadingTemplate,
         },
         async fetch(){
-            console.log(this.user.nam);
             await this.$axios.get(`/rest/v1/stories?author_Id=eq.${this.user.id}&select=*`,{
                 'headers': {
                     'apikey': this.user.token,
