@@ -65,9 +65,18 @@
             FooterTemplate,
             SidebarTemplate,
         },
-        // async fetch(){
-            
-        // },
+        async fetch(){
+            await this.$axios.get('/rest/v1/stories?select=*',{
+                'headers': {
+                    'apikey': this.user.token,
+                    'Authorization': `Bearer ${this.user.userToken}`,
+                }
+            }).then(ress=>{
+                this.db = ress.data;
+                this.show = this.db;
+                console.log('run');
+            });
+        },
         async beforeMount(){
             if (this.islogin === false){
                 if( await this.$store.dispatch('userControl/checkIsLogin') ){
@@ -77,18 +86,7 @@
             }
         },
         mounted(){
-            setInterval(async ()=>{
-                await this.$axios.get('/rest/v1/stories?select=*',{
-                    'headers': {
-                        'apikey': this.user.token,
-                        'Authorization': `Bearer ${this.user.userToken}`,
-                    }
-                }).then(ress=>{
-                    this.db = ress.data;
-                    this.show = this.db;
-                    console.log('run');
-                });
-            },100)
+            
         },
         methods:{
             addstory(){

@@ -30,7 +30,7 @@
                 <div class="rcncomnt rounded shadow">
                     <div class="row justify-content-center mb-2" v-for="(comment, i) in comments" :key="i">
                         <div class="row justify-content-start mb-2">
-                            <img :src="comment.profilePhoto" class="rounded-circle col-1" alt="">
+                            <img :src="comment.profilePhoto" class="cmnImg rounded-circle col-1" alt="">
                             <div class="col-9">
                                 <h6> {{ comment.user }} </h6>
                                 <p> {{ comment.comment }} </p>
@@ -195,7 +195,7 @@ export default {
     img{
         padding: 0%;
         width: 3rem;
-        height: 3rem;
+        height: 3rem !important;
     }
     .popupEdit{
         position: absolute;
