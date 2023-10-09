@@ -52,7 +52,7 @@
     export default {
         data(){
             return{
-                db: '',
+                db: [],
                 show: this.db,
                 filter: ['Folk Lore', 'Horror', 'History', 'Legend', 'Myth'],
                 all: true,
@@ -65,17 +65,9 @@
             FooterTemplate,
             SidebarTemplate,
         },
-        async fetch(){
-            await this.$axios.get('/rest/v1/stories?select=*',{
-                'headers': {
-                    'apikey': this.user.token,
-                    'Authorization': `Bearer ${this.user.userToken}`,
-                }
-            }).then(ress=>{
-                this.db = ress.data;
-                this.show = this.db;
-            });
-        },
+        // async fetch(){
+            
+        // },
         async beforeMount(){
             if (this.islogin === false){
                 if( await this.$store.dispatch('userControl/checkIsLogin') ){
@@ -85,7 +77,18 @@
             }
         },
         mounted(){
-
+            setInterval(async ()=>{
+                await this.$axios.get('/rest/v1/stories?select=*',{
+                    'headers': {
+                        'apikey': this.user.token,
+                        'Authorization': `Bearer ${this.user.userToken}`,
+                    }
+                }).then(ress=>{
+                    this.db = ress.data;
+                    this.show = this.db;
+                    console.log('run');
+                });
+            },100)
         },
         methods:{
             addstory(){
@@ -152,8 +155,8 @@
     }
 </script>
 <style scoped>
-    body{
-        background-color: rgb(226, 223, 223);
+    .mainwrap{
+        background-color: rgb(226, 223, 223) !important;
     }
     @font-face {
         font-family: 'boutiques of merauke';

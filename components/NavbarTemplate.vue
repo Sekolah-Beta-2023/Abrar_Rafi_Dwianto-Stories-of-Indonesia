@@ -118,6 +118,11 @@
     align-items: center;
     padding-bottom: 3%;
   }
+  .nb .profile img{
+    width: 3rem;
+    height: 3rem;
+    margin-right: 4%;
+  }
   @media only screen and (min-width: 412px){
     .offcanvas{
       min-width: 270px;

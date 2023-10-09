@@ -163,8 +163,8 @@ export const actions = {
             return resdata;
         } catch (error) {
             console.log(error.message);
-            document.cookie=`sb-access-token=; expires=${new Date(0).toUTCString()}`;
-            document.cookie=`sb-refresh-token=; expires=${new Date(0).toUTCString()}`;
+            document.cookie=`id=; expires=${new Date(0).toUTCString()}`;
+            document.cookie=`acc=; expires=${new Date(0).toUTCString()}`;
         }
     }
 }

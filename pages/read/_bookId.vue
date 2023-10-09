@@ -7,7 +7,7 @@
             <section class="main container-fluid">
                 <div>
                     <div id="wrapcntn" :class="islogin? 'rounded shadow' : 'rounded shadow mt-4'">
-                        <div class="content">
+                        <div class="content" v-html="book.content">
                         </div>
                     </div>
                     <section class="action" v-if="book.author_Id === user.id">
@@ -58,6 +58,7 @@
                 }).then(res=>{
                     this.book = res.data[0];
                     this.preparingDel();
+                    console.log(res);
                 });
             } catch (error) {
                 console.log(error.message);
@@ -81,7 +82,6 @@
             preparingDel(){
                 // set content
                 const cntn = document.querySelector('.content');
-                cntn.innerHTML = this.book.content;
                 this.cvrLink = this.book.cover;
                 this.cvrLink = this.cvrLink.split('/');
                 this.cvrLink = this.cvrLink.slice(-1)[0];
@@ -143,7 +143,7 @@
         }
     }
 </script>
-<style scoped>
+<style>
 
     body{
         background-color: rgb(226, 223, 223);
@@ -202,6 +202,11 @@
     }
     .content{
         text-align: center;
+        justify-content: start !important;
+    }
+    .content .cimg .cntnImg{
+        width: 40% !important;
+        margin: 2% 0%;
     }
 
     @media only screen and (max-width: 950px){

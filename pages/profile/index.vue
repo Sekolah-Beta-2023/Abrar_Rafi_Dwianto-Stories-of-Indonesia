@@ -17,6 +17,7 @@
                     </div>
                     <section class="action">
                         <nuxt-link :class="'btn btn-primary mt-3'" to="/profile/edit" >edit</nuxt-link>
+                        <button class="btn btn-danger mt-3" @click="logout">Logout</button>
                     </section>
                 </div>
             </section>
@@ -72,14 +73,18 @@
             
         },
         methods:{
-
+            logout(){
+                document.cookie=`id=; expires=${new Date(0).toUTCString()}`;
+                document.cookie=`acc=; expires=${new Date(0).toUTCString()}`;
+                document.location.href = '/'
+            },
         }
     }
 </script>
 <style scooped>
 
     body{
-        background-color: rgb(226, 223, 223);
+        background-color: rgb(226, 223, 223) !important;
     }
     .lgns{
         display: flex !important;
