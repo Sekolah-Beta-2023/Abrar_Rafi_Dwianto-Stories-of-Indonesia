@@ -1,5 +1,5 @@
 # stories-of-Indonesia
-Sebuah wiki website yang bertujuan untuk mengumplkan berbagai legenda, mitos, mitologi, creepypasta, dan cerita rakyat yang tersebar di seluruh Indonesia.
+Sebuah wiki website yang bertujuan untuk mengumpulkan berbagai legenda, mitos, mitologi, creepypasta, dan cerita rakyat yang tersebar di seluruh Indonesia.
 
 ## Features
 1. Membaca informasi berkaitan dengan legenda, mitos, mitologi, creepypasta, dan cerita rakyat yang tersebar di seluruh Indonesia.
