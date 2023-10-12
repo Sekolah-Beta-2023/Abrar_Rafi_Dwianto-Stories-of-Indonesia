@@ -9,7 +9,7 @@
                 <li :class="this.$route.path === '/myStories' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
                     <nuxt-link class="bi bi-book" to="/myStories">My Stories</nuxt-link>
                 </li>
-                <li :class="this.$route.path === '/myProfile' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
+                <li :class="this.$route.path === '/profile' ? 'nav-item mb-2 rounded active':'nav-item mb-2 rounded'">
                     <nuxt-link class="bi bi-person-fill" to="/profile">My Profile</nuxt-link>
                 </li>
             </ul>
